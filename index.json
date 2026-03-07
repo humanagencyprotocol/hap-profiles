@@ -1,0 +1,8 @@
+{
+  "repository": "github.com/humanagencyprotocol/hap-profiles",
+  "profiles": {
+    "github.com/humanagencyprotocol/hap-profiles/deploy-gate@0.3": "deploy-gate/0.3.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/payment-gate@0.3": "payment-gate/0.3.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/comms-send@0.3": "comms-send/0.3.profile.json"
+  }
+}

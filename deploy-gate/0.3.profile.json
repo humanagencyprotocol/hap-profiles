@@ -1,0 +1,91 @@
+{
+  "id": "github.com/humanagencyprotocol/hap-profiles/deploy-gate@0.3",
+  "version": "0.3",
+  "description": "Deployment authorization for CI/CD pipelines",
+
+  "frameSchema": {
+    "keyOrder": ["repo", "sha", "profile", "path"],
+    "fields": {
+      "repo": {
+        "type": "string",
+        "required": true,
+        "description": "Repository URL (full URL)"
+      },
+      "sha": {
+        "type": "string",
+        "required": true,
+        "description": "Git commit SHA (40 hex characters)"
+      },
+      "profile": {
+        "type": "string",
+        "required": true,
+        "description": "Profile identifier with version"
+      },
+      "path": {
+        "type": "string",
+        "required": true,
+        "description": "Execution path identifier"
+      }
+    }
+  },
+
+  "executionContextSchema": {
+    "fields": {
+      "profile": {
+        "source": "declared",
+        "description": "Profile identifier",
+        "required": true
+      },
+      "execution_path": {
+        "source": "declared",
+        "description": "Governance level",
+        "required": true
+      },
+      "repo": {
+        "source": "declared",
+        "description": "Repository URL",
+        "required": true
+      },
+      "sha": {
+        "source": "declared",
+        "description": "Head commit SHA",
+        "required": true
+      },
+      "base_sha": {
+        "source": "declared",
+        "description": "Base commit SHA (for diff computation)",
+        "required": true
+      }
+    }
+  },
+
+  "executionPaths": {
+    "deploy-prod-canary": {
+      "description": "Canary deployment to production (limited rollout)",
+      "requiredDomains": ["engineering"]
+    },
+    "deploy-prod-full": {
+      "description": "Full deployment to production (immediate rollout)",
+      "requiredDomains": ["engineering", "release_management"]
+    },
+    "deploy-prod-user-facing": {
+      "description": "User-facing feature deployment",
+      "requiredDomains": ["engineering", "marketing"]
+    },
+    "deploy-prod-security": {
+      "description": "Security-sensitive deployment",
+      "requiredDomains": ["engineering", "security"]
+    }
+  },
+
+  "requiredGates": ["frame", "problem", "objective", "tradeoff", "commitment", "decision_owner"],
+
+  "gateQuestions": {
+    "problem": { "question": "What problem are you solving?", "required": true },
+    "objective": { "question": "What outcome do you want?", "required": true },
+    "tradeoffs": { "question": "What are you willing to sacrifice?", "required": true }
+  },
+
+  "ttl": { "default": 3600, "max": 86400 },
+  "retention_minimum": 7776000
+}
