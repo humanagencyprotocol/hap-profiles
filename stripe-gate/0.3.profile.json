@@ -1,0 +1,125 @@
+{
+  "id": "github.com/humanagencyprotocol/hap-profiles/stripe-gate@0.3",
+  "version": "0.3",
+  "description": "Stripe operation authorization with action-scoped gating",
+
+  "frameSchema": {
+    "keyOrder": ["profile", "path", "action_type", "amount_max", "currency", "target_env"],
+    "fields": {
+      "profile": { "type": "string", "required": true },
+      "path": { "type": "string", "required": true },
+      "action_type": {
+        "type": "string",
+        "required": true,
+        "description": "Authorized Stripe operation (e.g. create_coupon, cancel_subscription)",
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "amount_max": {
+        "type": "number",
+        "required": true,
+        "description": "Maximum monetary amount in currency units (0 when not applicable)",
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      },
+      "currency": {
+        "type": "string",
+        "required": true,
+        "description": "Permitted currency code (set 'none' when not applicable)",
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "target_env": {
+        "type": "string",
+        "required": true,
+        "description": "Stripe environment (production or test)",
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      }
+    }
+  },
+
+  "executionContextSchema": {
+    "fields": {
+      "action_type": {
+        "source": "declared",
+        "description": "Stripe operation being performed",
+        "required": true,
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "amount": {
+        "source": "declared",
+        "description": "Monetary amount in currency units",
+        "required": true,
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      },
+      "currency": {
+        "source": "declared",
+        "description": "Currency code",
+        "required": true,
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "target_env": {
+        "source": "declared",
+        "description": "Stripe environment",
+        "required": true,
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      }
+    }
+  },
+
+  "executionPaths": {
+    "stripe-financial": {
+      "description": "Routine Stripe operations within authorized bounds",
+      "requiredDomains": ["finance"]
+    },
+    "stripe-financial-reviewed": {
+      "description": "Sensitive Stripe operations requiring dual authorization",
+      "requiredDomains": ["finance", "compliance"],
+      "ttl": { "default": 14400, "max": 86400 }
+    }
+  },
+
+  "requiredGates": ["frame", "problem", "objective", "tradeoff", "commitment", "decision_owner"],
+
+  "gateQuestions": {
+    "problem": { "question": "What problem does this agent authority address?", "required": true },
+    "objective": { "question": "What outcome should this authority enable?", "required": true },
+    "tradeoffs": { "question": "What risks do you accept with this authority?", "required": true }
+  },
+
+  "ttl": { "default": 3600, "max": 86400 },
+  "retention_minimum": 7776000,
+
+  "toolGating": {
+    "default": {
+      "executionMapping": {},
+      "staticExecution": { "action_type": "read", "target_env": "production" }
+    },
+    "overrides": {
+      "create_customer": {
+        "executionMapping": {},
+        "staticExecution": { "action_type": "manage_customer", "target_env": "production" }
+      },
+      "create_product": {
+        "executionMapping": {},
+        "staticExecution": { "action_type": "manage_product", "target_env": "production" }
+      },
+      "cancel_subscription": {
+        "executionMapping": {},
+        "staticExecution": { "action_type": "cancel_subscription", "target_env": "production" }
+      },
+      "update_subscription": {
+        "executionMapping": {},
+        "staticExecution": { "action_type": "update_subscription", "target_env": "production" }
+      },
+      "create_coupon": {
+        "executionMapping": {
+          "amount_off": { "field": "amount", "divisor": 100 },
+          "currency": "currency"
+        },
+        "staticExecution": { "action_type": "create_coupon", "target_env": "production" }
+      },
+      "update_dispute": {
+        "executionMapping": {},
+        "staticExecution": { "action_type": "update_dispute", "target_env": "production" }
+      }
+    }
+  }
+}
