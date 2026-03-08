@@ -95,11 +95,52 @@
     "overrides": {
       "create_customer": {
         "executionMapping": {},
-        "staticExecution": { "action_type": "manage_customer", "target_env": "production" }
+        "staticExecution": { "action_type": "create_customer", "target_env": "production" }
       },
       "create_product": {
         "executionMapping": {},
-        "staticExecution": { "action_type": "manage_product", "target_env": "production" }
+        "staticExecution": { "action_type": "create_product", "target_env": "production" }
+      },
+      "create_coupon": {
+        "executionMapping": {
+          "amount_off": { "field": "amount", "divisor": 100 },
+          "currency": "currency"
+        },
+        "staticExecution": { "action_type": "create_coupon", "target_env": "production" }
+      },
+      "create_price": {
+        "executionMapping": {
+          "unit_amount": { "field": "amount", "divisor": 100 },
+          "currency": "currency"
+        },
+        "staticExecution": { "action_type": "create_price", "target_env": "production" }
+      },
+      "create_invoice": {
+        "executionMapping": {
+          "currency": "currency"
+        },
+        "staticExecution": { "action_type": "create_invoice", "target_env": "production" }
+      },
+      "create_invoice_item": {
+        "executionMapping": {
+          "amount": { "field": "amount", "divisor": 100 },
+          "currency": "currency"
+        },
+        "staticExecution": { "action_type": "create_invoice_item", "target_env": "production" }
+      },
+      "finalize_invoice": {
+        "executionMapping": {},
+        "staticExecution": { "action_type": "finalize_invoice", "target_env": "production" }
+      },
+      "create_payment_link": {
+        "executionMapping": {},
+        "staticExecution": { "action_type": "create_payment_link", "target_env": "production" }
+      },
+      "create_refund": {
+        "executionMapping": {
+          "amount": { "field": "amount", "divisor": 100 }
+        },
+        "staticExecution": { "action_type": "create_refund", "target_env": "production" }
       },
       "cancel_subscription": {
         "executionMapping": {},
@@ -108,13 +149,6 @@
       "update_subscription": {
         "executionMapping": {},
         "staticExecution": { "action_type": "update_subscription", "target_env": "production" }
-      },
-      "create_coupon": {
-        "executionMapping": {
-          "amount_off": { "field": "amount", "divisor": 100 },
-          "currency": "currency"
-        },
-        "staticExecution": { "action_type": "create_coupon", "target_env": "production" }
       },
       "update_dispute": {
         "executionMapping": {},
