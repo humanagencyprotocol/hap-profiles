@@ -4,7 +4,7 @@
   "description": "Financial authority — governs committing company money: charges, refunds, subscriptions, payouts",
 
   "frameSchema": {
-    "keyOrder": ["profile", "path", "amount_max", "currency", "action_type", "target_env"],
+    "keyOrder": ["profile", "path", "amount_max", "currency", "action_type"],
     "fields": {
       "profile": { "type": "string", "required": true },
       "path": { "type": "string", "required": true },
@@ -24,12 +24,6 @@
         "type": "string",
         "required": true,
         "description": "Authorized financial operation (charge, refund, subscribe)",
-        "constraint": { "type": "string", "enforceable": ["enum"] }
-      },
-      "target_env": {
-        "type": "string",
-        "required": true,
-        "description": "Target environment (production or sandbox)",
         "constraint": { "type": "string", "enforceable": ["enum"] }
       },
       "amount_daily_max": {
@@ -70,12 +64,6 @@
       "currency": {
         "source": "declared",
         "description": "Currency code",
-        "required": true,
-        "constraint": { "type": "string", "enforceable": ["enum"] }
-      },
-      "target_env": {
-        "source": "declared",
-        "description": "Target environment",
         "required": true,
         "constraint": { "type": "string", "enforceable": ["enum"] }
       },
@@ -133,7 +121,7 @@
   "toolGating": {
     "default": {
       "executionMapping": {},
-      "staticExecution": { "action_type": "read", "target_env": "production" }
+      "staticExecution": { "action_type": "read" }
     },
     "overrides": {
       "create_payment_link": {
@@ -141,39 +129,39 @@
           "unit_amount": { "field": "amount", "divisor": 100 },
           "currency": "currency"
         },
-        "staticExecution": { "action_type": "charge", "target_env": "production" }
+        "staticExecution": { "action_type": "charge" }
       },
       "create_price": {
         "executionMapping": {
           "unit_amount": { "field": "amount", "divisor": 100 },
           "currency": "currency"
         },
-        "staticExecution": { "action_type": "charge", "target_env": "production" }
+        "staticExecution": { "action_type": "charge" }
       },
       "create_invoice_item": {
         "executionMapping": {
           "amount": { "field": "amount", "divisor": 100 },
           "currency": "currency"
         },
-        "staticExecution": { "action_type": "charge", "target_env": "production" }
+        "staticExecution": { "action_type": "charge" }
       },
       "create_refund": {
         "executionMapping": {
           "amount": { "field": "amount", "divisor": 100 }
         },
-        "staticExecution": { "action_type": "refund", "target_env": "production" }
+        "staticExecution": { "action_type": "refund" }
       },
       "create_subscription": {
         "executionMapping": {},
-        "staticExecution": { "action_type": "subscribe", "target_env": "production" }
+        "staticExecution": { "action_type": "subscribe" }
       },
       "cancel_subscription": {
         "executionMapping": {},
-        "staticExecution": { "action_type": "subscribe", "target_env": "production" }
+        "staticExecution": { "action_type": "subscribe" }
       },
       "update_subscription": {
         "executionMapping": {},
-        "staticExecution": { "action_type": "subscribe", "target_env": "production" }
+        "staticExecution": { "action_type": "subscribe" }
       },
       "list_customers": null,
       "retrieve_balance": null,
