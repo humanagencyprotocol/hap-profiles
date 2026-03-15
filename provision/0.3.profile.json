@@ -1,0 +1,152 @@
+{
+  "id": "github.com/humanagencyprotocol/hap-profiles/provision@0.3",
+  "version": "0.3",
+  "description": "Infrastructure authority — governs creating, modifying, or destroying infrastructure: DNS, compute, storage, secrets",
+
+  "frameSchema": {
+    "keyOrder": ["profile", "path", "resource_type", "action_type", "target_env", "blast_radius", "change_count_daily_max"],
+    "fields": {
+      "profile": { "type": "string", "required": true },
+      "path": { "type": "string", "required": true },
+      "resource_type": {
+        "type": "string",
+        "required": true,
+        "description": "Infrastructure resource type (dns, compute, storage, secret)",
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "action_type": {
+        "type": "string",
+        "required": true,
+        "description": "Infrastructure action (create, modify, delete)",
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "target_env": {
+        "type": "string",
+        "required": true,
+        "description": "Target environment (production or sandbox)",
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "blast_radius": {
+        "type": "string",
+        "required": true,
+        "description": "Blast radius of the change (single, service, global)",
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "change_count_daily_max": {
+        "type": "number",
+        "required": true,
+        "description": "Maximum infrastructure changes per day",
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      }
+    }
+  },
+
+  "executionContextSchema": {
+    "fields": {
+      "resource_type": {
+        "source": "declared",
+        "description": "Infrastructure resource type being affected",
+        "required": true,
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "action_type": {
+        "source": "declared",
+        "description": "Infrastructure action being performed",
+        "required": true,
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "target_env": {
+        "source": "declared",
+        "description": "Target environment",
+        "required": true,
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "blast_radius": {
+        "source": "declared",
+        "description": "Blast radius of this change",
+        "required": true,
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "change_count_daily": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "daily",
+        "description": "Running daily change count (resolved from execution log)",
+        "required": true,
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      }
+    }
+  },
+
+  "executionPaths": {
+    "provision-sandbox": {
+      "description": "Non-production infrastructure changes",
+      "requiredDomains": ["engineering"],
+      "ttl": { "default": 28800, "max": 86400 }
+    },
+    "provision-production": {
+      "description": "Production infrastructure changes",
+      "requiredDomains": ["platform", "engineering"],
+      "ttl": { "default": 7200, "max": 86400 }
+    },
+    "provision-destructive": {
+      "description": "Deletions, secret rotation, and high-impact changes",
+      "requiredDomains": ["platform", "engineering", "security"],
+      "ttl": { "default": 3600, "max": 86400 }
+    }
+  },
+
+  "requiredGates": ["frame", "problem", "objective", "tradeoff", "commitment", "decision_owner"],
+
+  "gateQuestions": {
+    "problem": { "question": "What problem does this infrastructure authority address?", "required": true },
+    "objective": { "question": "What outcome should this infrastructure authority enable?", "required": true },
+    "tradeoffs": { "question": "What infrastructure risks do you accept with this authority?", "required": true }
+  },
+
+  "ttl": { "default": 28800, "max": 86400 },
+  "retention_minimum": 7776000,
+
+  "toolGating": {
+    "default": {
+      "executionMapping": {},
+      "staticExecution": { "resource_type": "dns", "action_type": "create", "target_env": "sandbox", "blast_radius": "single" }
+    },
+    "overrides": {
+      "create_dns_record": {
+        "executionMapping": {},
+        "staticExecution": { "resource_type": "dns", "action_type": "create", "blast_radius": "single" }
+      },
+      "update_dns_record": {
+        "executionMapping": {},
+        "staticExecution": { "resource_type": "dns", "action_type": "modify", "blast_radius": "single" }
+      },
+      "delete_dns_record": {
+        "executionMapping": {},
+        "staticExecution": { "resource_type": "dns", "action_type": "delete", "blast_radius": "single" }
+      },
+      "create_worker": {
+        "executionMapping": {},
+        "staticExecution": { "resource_type": "compute", "action_type": "create", "blast_radius": "service" }
+      },
+      "delete_worker": {
+        "executionMapping": {},
+        "staticExecution": { "resource_type": "compute", "action_type": "delete", "blast_radius": "service" }
+      },
+      "put_kv_value": {
+        "executionMapping": {},
+        "staticExecution": { "resource_type": "storage", "action_type": "modify", "blast_radius": "single" }
+      },
+      "delete_kv_value": {
+        "executionMapping": {},
+        "staticExecution": { "resource_type": "storage", "action_type": "delete", "blast_radius": "single" }
+      },
+      "list_dns_records": null,
+      "list_workers": null,
+      "get_kv_value": null,
+      "list_kv_keys": null,
+      "list_r2_objects": null,
+      "get_worker_details": null
+    }
+  }
+}

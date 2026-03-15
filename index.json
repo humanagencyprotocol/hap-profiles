@@ -1,9 +1,11 @@
 {
   "repository": "github.com/humanagencyprotocol/hap-profiles",
   "profiles": {
-    "github.com/humanagencyprotocol/hap-profiles/deploy-gate@0.3": "deploy-gate/0.3.profile.json",
-    "github.com/humanagencyprotocol/hap-profiles/payment-gate@0.3": "payment-gate/0.3.profile.json",
-    "github.com/humanagencyprotocol/hap-profiles/comms-send@0.3": "comms-send/0.3.profile.json",
-    "github.com/humanagencyprotocol/hap-profiles/stripe-gate@0.3": "stripe-gate/0.3.profile.json"
+    "github.com/humanagencyprotocol/hap-profiles/stripe-gate@0.3": "stripe-gate/0.3.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/spend@0.3": "spend/0.3.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/ship@0.3": "ship/0.3.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/data@0.3": "data/0.3.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/publish@0.3": "publish/0.3.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/provision@0.3": "provision/0.3.profile.json"
   }
 }

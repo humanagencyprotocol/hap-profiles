@@ -1,0 +1,128 @@
+{
+  "id": "github.com/humanagencyprotocol/hap-profiles/ship@0.3",
+  "version": "0.3",
+  "description": "Deployment authority — governs what runs in production: merges, deployments, rollbacks",
+
+  "frameSchema": {
+    "keyOrder": ["profile", "path", "repository", "target_env", "action_type", "deploy_count_daily_max"],
+    "fields": {
+      "profile": { "type": "string", "required": true },
+      "path": { "type": "string", "required": true },
+      "repository": {
+        "type": "string",
+        "required": true,
+        "description": "Authorized repository (org/repo format)",
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "target_env": {
+        "type": "string",
+        "required": true,
+        "description": "Target environment (production or sandbox)",
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "action_type": {
+        "type": "string",
+        "required": true,
+        "description": "Deployment action (merge, deploy, rollback)",
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "deploy_count_daily_max": {
+        "type": "number",
+        "required": true,
+        "description": "Maximum number of deployments per day",
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      }
+    }
+  },
+
+  "executionContextSchema": {
+    "fields": {
+      "repository": {
+        "source": "declared",
+        "description": "Target repository (org/repo)",
+        "required": true,
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "target_env": {
+        "source": "declared",
+        "description": "Target environment",
+        "required": true,
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "action_type": {
+        "source": "declared",
+        "description": "Deployment action being performed",
+        "required": true,
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "commit_hash": {
+        "source": "declared",
+        "description": "Git commit hash (bound at attestation time)",
+        "required": false,
+        "constraint": { "type": "string", "enforceable": [] }
+      },
+      "deploy_count_daily": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "daily",
+        "description": "Running daily deployment count (resolved from execution log)",
+        "required": true,
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      }
+    }
+  },
+
+  "executionPaths": {
+    "ship-sandbox": {
+      "description": "Deploy freely to sandbox environments",
+      "requiredDomains": ["engineering"],
+      "ttl": { "default": 28800, "max": 86400 }
+    },
+    "ship-production": {
+      "description": "Production deployments requiring dual authorization",
+      "requiredDomains": ["engineering", "release_management"],
+      "ttl": { "default": 7200, "max": 86400 }
+    }
+  },
+
+  "requiredGates": ["frame", "problem", "objective", "tradeoff", "commitment", "decision_owner"],
+
+  "gateQuestions": {
+    "problem": { "question": "What problem does this deployment authority address?", "required": true },
+    "objective": { "question": "What outcome should this deployment authority enable?", "required": true },
+    "tradeoffs": { "question": "What deployment risks do you accept with this authority?", "required": true }
+  },
+
+  "ttl": { "default": 28800, "max": 86400 },
+  "retention_minimum": 7776000,
+
+  "toolGating": {
+    "default": {
+      "executionMapping": {},
+      "staticExecution": { "action_type": "read", "target_env": "sandbox" }
+    },
+    "overrides": {
+      "merge_pull_request": {
+        "executionMapping": {
+          "owner": { "field": "repository", "divisor": 1 },
+          "repo": "repository"
+        },
+        "staticExecution": { "action_type": "merge" }
+      },
+      "create_or_update_file": {
+        "executionMapping": {
+          "owner": { "field": "repository", "divisor": 1 },
+          "repo": "repository"
+        },
+        "staticExecution": { "action_type": "deploy" }
+      },
+      "search_code": null,
+      "list_issues": null,
+      "get_pull_request": null,
+      "list_pull_requests": null,
+      "get_file_contents": null,
+      "search_repositories": null,
+      "list_commits": null
+    }
+  }
+}
