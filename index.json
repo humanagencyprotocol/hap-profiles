@@ -1,7 +1,6 @@
 {
   "repository": "github.com/humanagencyprotocol/hap-profiles",
   "profiles": {
-    "github.com/humanagencyprotocol/hap-profiles/stripe-gate@0.3": "stripe-gate/0.3.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/spend@0.3": "spend/0.3.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/ship@0.3": "ship/0.3.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/data@0.3": "data/0.3.profile.json",

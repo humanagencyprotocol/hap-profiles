@@ -4,7 +4,7 @@
   "description": "Data authority — governs accessing and modifying business data: queries, schema changes, exports",
 
   "frameSchema": {
-    "keyOrder": ["profile", "path", "access_level", "data_scope", "target_env", "row_limit_max", "query_count_daily_max", "export_row_count_daily_max"],
+    "keyOrder": ["profile", "path", "access_level", "data_scope", "scope", "row_limit_max", "query_count_daily_max", "export_row_count_daily_max"],
     "fields": {
       "profile": { "type": "string", "required": true },
       "path": { "type": "string", "required": true },
@@ -20,10 +20,10 @@
         "description": "Data scope authorization (public, internal, pii)",
         "constraint": { "type": "string", "enforceable": ["enum"] }
       },
-      "target_env": {
+      "scope": {
         "type": "string",
         "required": true,
-        "description": "Target environment (production or sandbox)",
+        "description": "Impact scope (external = production data, internal = sandbox/test data)",
         "constraint": { "type": "string", "enforceable": ["enum"] }
       },
       "row_limit_max": {
@@ -61,9 +61,9 @@
         "required": true,
         "constraint": { "type": "string", "enforceable": ["enum"] }
       },
-      "target_env": {
+      "scope": {
         "source": "declared",
-        "description": "Target environment",
+        "description": "Impact scope of this data operation",
         "required": true,
         "constraint": { "type": "string", "enforceable": ["enum"] }
       },
@@ -124,16 +124,16 @@
   "toolGating": {
     "default": {
       "executionMapping": {},
-      "staticExecution": { "access_level": "read", "data_scope": "public", "target_env": "sandbox", "row_limit": 0 }
+      "staticExecution": { "access_level": "read", "data_scope": "public", "scope": "internal", "row_limit": 0 }
     },
     "overrides": {
       "query": {
         "executionMapping": {},
-        "staticExecution": { "access_level": "read", "target_env": "production", "row_limit": 100 }
+        "staticExecution": { "access_level": "read", "scope": "external", "row_limit": 100 }
       },
       "run_sql": {
         "executionMapping": {},
-        "staticExecution": { "access_level": "write", "target_env": "production", "row_limit": 0 }
+        "staticExecution": { "access_level": "write", "scope": "external", "row_limit": 0 }
       },
       "get_table_schema": null,
       "list_tables": null,

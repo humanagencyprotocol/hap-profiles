@@ -4,7 +4,7 @@
   "description": "Deployment authority — governs what runs in production: merges, deployments, rollbacks",
 
   "frameSchema": {
-    "keyOrder": ["profile", "path", "repository", "target_env", "action_type", "deploy_count_daily_max"],
+    "keyOrder": ["profile", "path", "repository", "scope", "action_type", "deploy_count_daily_max"],
     "fields": {
       "profile": { "type": "string", "required": true },
       "path": { "type": "string", "required": true },
@@ -14,10 +14,10 @@
         "description": "Authorized repository (org/repo format)",
         "constraint": { "type": "string", "enforceable": ["enum"] }
       },
-      "target_env": {
+      "scope": {
         "type": "string",
         "required": true,
-        "description": "Target environment (production or sandbox)",
+        "description": "Impact scope (external = production, internal = staging/sandbox)",
         "constraint": { "type": "string", "enforceable": ["enum"] }
       },
       "action_type": {
@@ -43,9 +43,9 @@
         "required": true,
         "constraint": { "type": "string", "enforceable": ["enum"] }
       },
-      "target_env": {
+      "scope": {
         "source": "declared",
-        "description": "Target environment",
+        "description": "Impact scope of this deployment",
         "required": true,
         "constraint": { "type": "string", "enforceable": ["enum"] }
       },
@@ -73,12 +73,12 @@
   },
 
   "executionPaths": {
-    "ship-sandbox": {
-      "description": "Deploy freely to sandbox environments",
+    "ship-internal": {
+      "description": "Deploy to staging and sandbox environments",
       "requiredDomains": ["engineering"],
       "ttl": { "default": 28800, "max": 86400 }
     },
-    "ship-production": {
+    "ship-external": {
       "description": "Production deployments requiring dual authorization",
       "requiredDomains": ["engineering", "release_management"],
       "ttl": { "default": 7200, "max": 86400 }
@@ -99,7 +99,7 @@
   "toolGating": {
     "default": {
       "executionMapping": {},
-      "staticExecution": { "action_type": "read", "target_env": "sandbox" }
+      "staticExecution": { "action_type": "read", "scope": "internal" }
     },
     "overrides": {
       "merge_pull_request": {

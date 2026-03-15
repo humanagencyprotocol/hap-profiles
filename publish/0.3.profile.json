@@ -4,7 +4,7 @@
   "description": "External communication authority — governs sending anything externally as the company: emails, notifications, webhooks",
 
   "frameSchema": {
-    "keyOrder": ["profile", "path", "channel", "audience", "recipient_max", "target_env", "send_count_daily_max", "send_count_monthly_max"],
+    "keyOrder": ["profile", "path", "channel", "audience", "recipient_max", "scope", "send_count_daily_max", "send_count_monthly_max"],
     "fields": {
       "profile": { "type": "string", "required": true },
       "path": { "type": "string", "required": true },
@@ -26,10 +26,10 @@
         "description": "Maximum recipients per send operation",
         "constraint": { "type": "number", "enforceable": ["max"] }
       },
-      "target_env": {
+      "scope": {
         "type": "string",
         "required": true,
-        "description": "Target environment (production or sandbox)",
+        "description": "Impact scope (external = real customers, internal = test accounts)",
         "constraint": { "type": "string", "enforceable": ["enum"] }
       },
       "send_count_daily_max": {
@@ -67,9 +67,9 @@
         "required": true,
         "constraint": { "type": "number", "enforceable": ["max"] }
       },
-      "target_env": {
+      "scope": {
         "source": "declared",
-        "description": "Target environment",
+        "description": "Impact scope of this send",
         "required": true,
         "constraint": { "type": "string", "enforceable": ["enum"] }
       },
@@ -124,20 +124,20 @@
   "toolGating": {
     "default": {
       "executionMapping": {},
-      "staticExecution": { "channel": "email", "audience": "individual", "recipient_count": 0, "target_env": "production" }
+      "staticExecution": { "channel": "email", "audience": "individual", "recipient_count": 0, "scope": "internal" }
     },
     "overrides": {
       "send_email": {
         "executionMapping": {
           "to": "recipient_count"
         },
-        "staticExecution": { "channel": "email", "audience": "individual", "target_env": "production" }
+        "staticExecution": { "channel": "email", "audience": "individual", "scope": "external" }
       },
       "send_batch": {
         "executionMapping": {
           "batch_size": "recipient_count"
         },
-        "staticExecution": { "channel": "email", "audience": "segment", "target_env": "production" }
+        "staticExecution": { "channel": "email", "audience": "segment", "scope": "external" }
       },
       "create_template": null,
       "update_template": null,

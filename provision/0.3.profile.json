@@ -4,7 +4,7 @@
   "description": "Infrastructure authority — governs creating, modifying, or destroying infrastructure: DNS, compute, storage, secrets",
 
   "frameSchema": {
-    "keyOrder": ["profile", "path", "resource_type", "action_type", "target_env", "blast_radius", "change_count_daily_max"],
+    "keyOrder": ["profile", "path", "resource_type", "action_type", "scope", "blast_radius", "change_count_daily_max"],
     "fields": {
       "profile": { "type": "string", "required": true },
       "path": { "type": "string", "required": true },
@@ -20,10 +20,10 @@
         "description": "Infrastructure action (create, modify, delete)",
         "constraint": { "type": "string", "enforceable": ["enum"] }
       },
-      "target_env": {
+      "scope": {
         "type": "string",
         "required": true,
-        "description": "Target environment (production or sandbox)",
+        "description": "Impact scope (external = production infrastructure, internal = sandbox/dev)",
         "constraint": { "type": "string", "enforceable": ["enum"] }
       },
       "blast_radius": {
@@ -55,9 +55,9 @@
         "required": true,
         "constraint": { "type": "string", "enforceable": ["enum"] }
       },
-      "target_env": {
+      "scope": {
         "source": "declared",
-        "description": "Target environment",
+        "description": "Impact scope of this infrastructure change",
         "required": true,
         "constraint": { "type": "string", "enforceable": ["enum"] }
       },
@@ -79,12 +79,12 @@
   },
 
   "executionPaths": {
-    "provision-sandbox": {
+    "provision-internal": {
       "description": "Non-production infrastructure changes",
       "requiredDomains": ["engineering"],
       "ttl": { "default": 28800, "max": 86400 }
     },
-    "provision-production": {
+    "provision-external": {
       "description": "Production infrastructure changes",
       "requiredDomains": ["platform", "engineering"],
       "ttl": { "default": 7200, "max": 86400 }
@@ -110,7 +110,7 @@
   "toolGating": {
     "default": {
       "executionMapping": {},
-      "staticExecution": { "resource_type": "dns", "action_type": "create", "target_env": "sandbox", "blast_radius": "single" }
+      "staticExecution": { "resource_type": "dns", "action_type": "create", "scope": "internal", "blast_radius": "single" }
     },
     "overrides": {
       "create_dns_record": {
