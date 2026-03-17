@@ -163,13 +163,9 @@
         "executionMapping": {},
         "staticExecution": { "action_type": "subscribe" }
       },
-      "list_customers": null,
       "retrieve_balance": null,
-      "list_products": null,
-      "list_prices": null,
       "list_invoices": null,
       "list_subscriptions": null,
-      "search_customers": null,
       "list_payment_methods": null
     }
   }
