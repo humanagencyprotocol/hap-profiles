@@ -42,13 +42,15 @@
         "type": "string",
         "required": true,
         "description": "Permitted currency code",
-        "constraint": { "type": "string", "enforceable": ["enum"] }
+        "constraint": { "type": "string", "enforceable": ["enum"] },
+        "enum": ["USD", "EUR", "GBP", "CHF", "JPY", "CAD", "AUD"]
       },
       "action_type": {
         "type": "string",
         "required": true,
-        "description": "Authorized financial operation (charge, refund, subscribe)",
-        "constraint": { "type": "string", "enforceable": ["enum"] }
+        "description": "Authorized financial operation",
+        "constraint": { "type": "string", "enforceable": ["enum"] },
+        "enum": ["charge", "refund", "subscribe"]
       }
     }
   },
