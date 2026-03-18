@@ -1,0 +1,150 @@
+{
+  "id": "github.com/humanagencyprotocol/hap-profiles/data@0.4",
+  "version": "0.4",
+  "description": "Data authority — governs accessing and modifying business data: queries, schema changes, exports",
+
+  "boundsSchema": {
+    "keyOrder": ["profile", "path", "row_limit_max", "query_count_daily_max", "export_row_count_daily_max"],
+    "fields": {
+      "profile": { "type": "string", "required": true },
+      "path": { "type": "string", "required": true },
+      "row_limit_max": {
+        "type": "number",
+        "required": true,
+        "description": "Maximum rows returned per query",
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      },
+      "query_count_daily_max": {
+        "type": "number",
+        "required": true,
+        "description": "Maximum queries per day",
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      },
+      "export_row_count_daily_max": {
+        "type": "number",
+        "required": true,
+        "description": "Maximum exported rows per day",
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      }
+    }
+  },
+
+  "contextSchema": {
+    "keyOrder": ["access_level", "data_scope", "scope"],
+    "fields": {
+      "access_level": {
+        "type": "string",
+        "required": true,
+        "description": "Authorized access level (read, write, admin)",
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "data_scope": {
+        "type": "string",
+        "required": true,
+        "description": "Data scope authorization (public, internal, pii)",
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "scope": {
+        "type": "string",
+        "required": true,
+        "description": "Impact scope (external = production data, internal = sandbox/test data)",
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      }
+    }
+  },
+
+  "executionContextSchema": {
+    "fields": {
+      "access_level": {
+        "source": "declared",
+        "description": "Access level for this operation",
+        "required": true,
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "data_scope": {
+        "source": "declared",
+        "description": "Data scope being accessed",
+        "required": true,
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "scope": {
+        "source": "declared",
+        "description": "Impact scope of this data operation",
+        "required": true,
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "row_limit": {
+        "source": "declared",
+        "description": "Number of rows in this query result",
+        "required": true,
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      },
+      "query_count_daily": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "daily",
+        "description": "Running daily query count (resolved from execution log)",
+        "required": true,
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      },
+      "export_row_count_daily": {
+        "source": "cumulative",
+        "cumulativeField": "row_limit",
+        "window": "daily",
+        "description": "Running daily exported row count (resolved from execution log)",
+        "required": true,
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      }
+    }
+  },
+
+  "executionPaths": {
+    "data-read": {
+      "description": "Read-only queries, no PII access",
+      "requiredDomains": ["engineering"],
+      "ttl": { "default": 28800, "max": 86400 }
+    },
+    "data-write": {
+      "description": "Schema changes and data writes",
+      "requiredDomains": ["engineering", "data_owner"],
+      "ttl": { "default": 7200, "max": 86400 }
+    },
+    "data-export": {
+      "description": "Bulk exports and PII access",
+      "requiredDomains": ["data_owner", "compliance"],
+      "ttl": { "default": 3600, "max": 86400 }
+    }
+  },
+
+  "requiredGates": ["bounds", "problem", "objective", "tradeoff", "commitment", "decision_owner"],
+
+  "gateQuestions": {
+    "problem": { "question": "What problem does this data access authority address?", "required": true },
+    "objective": { "question": "What outcome should this data authority enable?", "required": true },
+    "tradeoffs": { "question": "What data risks do you accept with this authority?", "required": true }
+  },
+
+  "ttl": { "default": 28800, "max": 86400 },
+  "retention_minimum": 7776000,
+
+  "toolGating": {
+    "default": {
+      "executionMapping": {},
+      "staticExecution": { "access_level": "read", "data_scope": "public", "scope": "internal", "row_limit": 0 }
+    },
+    "overrides": {
+      "query": {
+        "executionMapping": {},
+        "staticExecution": { "access_level": "read", "scope": "external", "row_limit": 100 }
+      },
+      "run_sql": {
+        "executionMapping": {},
+        "staticExecution": { "access_level": "write", "scope": "external", "row_limit": 0 }
+      },
+      "get_table_schema": null,
+      "list_tables": null,
+      "explain_query": null,
+      "get_database_info": null
+    }
+  }
+}
