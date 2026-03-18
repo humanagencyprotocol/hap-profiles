@@ -101,17 +101,14 @@
   "executionPaths": {
     "data-read": {
       "description": "Read-only queries, no PII access",
-      "requiredDomains": ["engineering"],
       "ttl": { "default": 28800, "max": 86400 }
     },
     "data-write": {
       "description": "Schema changes and data writes",
-      "requiredDomains": ["engineering", "data_owner"],
       "ttl": { "default": 7200, "max": 86400 }
     },
     "data-export": {
       "description": "Bulk exports and PII access",
-      "requiredDomains": ["data_owner", "compliance"],
       "ttl": { "default": 3600, "max": 86400 }
     }
   },

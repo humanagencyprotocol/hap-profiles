@@ -87,17 +87,14 @@
   "executionPaths": {
     "provision-internal": {
       "description": "Non-production infrastructure changes",
-      "requiredDomains": ["engineering"],
       "ttl": { "default": 28800, "max": 86400 }
     },
     "provision-external": {
       "description": "Production infrastructure changes",
-      "requiredDomains": ["platform", "engineering"],
       "ttl": { "default": 7200, "max": 86400 }
     },
     "provision-destructive": {
       "description": "Deletions, secret rotation, and high-impact changes",
-      "requiredDomains": ["platform", "engineering", "security"],
       "ttl": { "default": 3600, "max": 86400 }
     }
   },

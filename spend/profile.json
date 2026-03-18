@@ -105,12 +105,10 @@
   "executionPaths": {
     "spend-routine": {
       "description": "Day-to-day financial transactions within authorized bounds",
-      "requiredDomains": ["finance"],
       "ttl": { "default": 86400, "max": 86400 }
     },
     "spend-reviewed": {
       "description": "Large or unusual transactions requiring dual authorization",
-      "requiredDomains": ["finance", "compliance"],
       "ttl": { "default": 14400, "max": 86400 }
     }
   },

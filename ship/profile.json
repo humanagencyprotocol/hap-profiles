@@ -81,12 +81,10 @@
   "executionPaths": {
     "ship-internal": {
       "description": "Deploy to staging and sandbox environments",
-      "requiredDomains": ["engineering"],
       "ttl": { "default": 28800, "max": 86400 }
     },
     "ship-external": {
       "description": "Production deployments requiring dual authorization",
-      "requiredDomains": ["engineering", "release_management"],
       "ttl": { "default": 7200, "max": 86400 }
     }
   },

@@ -101,17 +101,14 @@
   "executionPaths": {
     "publish-transactional": {
       "description": "System emails — password resets, receipts, notifications",
-      "requiredDomains": ["engineering"],
       "ttl": { "default": 86400, "max": 86400 }
     },
     "publish-marketing": {
       "description": "Campaigns and announcements to segments",
-      "requiredDomains": ["marketing", "product"],
       "ttl": { "default": 7200, "max": 86400 }
     },
     "publish-all-users": {
       "description": "Broadcast to all users",
-      "requiredDomains": ["marketing", "product", "compliance"],
       "ttl": { "default": 3600, "max": 86400 }
     }
   },
