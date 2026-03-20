@@ -1,6 +1,7 @@
 {
   "id": "github.com/humanagencyprotocol/hap-profiles/ship@0.3",
   "version": "0.3",
+  "name": "Deployment & Release",
   "description": "Deployment authority — governs what runs in production: merges, deployments, rollbacks",
 
   "frameSchema": {

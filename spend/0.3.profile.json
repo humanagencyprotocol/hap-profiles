@@ -1,6 +1,7 @@
 {
   "id": "github.com/humanagencyprotocol/hap-profiles/spend@0.3",
   "version": "0.3",
+  "name": "Financial Transactions",
   "description": "Financial authority — governs committing company money: charges, refunds, subscriptions, payouts",
 
   "frameSchema": {

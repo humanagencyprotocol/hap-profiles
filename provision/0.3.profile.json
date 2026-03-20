@@ -1,6 +1,7 @@
 {
   "id": "github.com/humanagencyprotocol/hap-profiles/provision@0.3",
   "version": "0.3",
+  "name": "Infrastructure Management",
   "description": "Infrastructure authority — governs creating, modifying, or destroying infrastructure: DNS, compute, storage, secrets",
 
   "frameSchema": {

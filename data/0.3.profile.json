@@ -1,6 +1,7 @@
 {
   "id": "github.com/humanagencyprotocol/hap-profiles/data@0.3",
   "version": "0.3",
+  "name": "Data Access & Queries",
   "description": "Data authority — governs accessing and modifying business data: queries, schema changes, exports",
 
   "frameSchema": {

@@ -1,5 +1,6 @@
 {
   "id": "github.com/humanagencyprotocol/hap-profiles/publish@0.4",
+  "name": "External Communication",
   "version": "0.4",
   "description": "External communication authority — governs sending anything externally as the company: emails, notifications, webhooks",
 
