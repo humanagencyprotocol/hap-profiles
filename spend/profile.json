@@ -123,57 +123,5 @@
   },
 
   "ttl": { "default": 86400, "max": 86400 },
-  "retention_minimum": 7776000,
-
-  "toolGating": {
-    "default": {
-      "executionMapping": {},
-      "staticExecution": { "action_type": "read" }
-    },
-    "overrides": {
-      "create_payment_link": {
-        "executionMapping": {
-          "unit_amount": { "field": "amount", "divisor": 100 },
-          "currency": "currency"
-        },
-        "staticExecution": { "action_type": "charge" }
-      },
-      "create_price": {
-        "executionMapping": {
-          "unit_amount": { "field": "amount", "divisor": 100 },
-          "currency": "currency"
-        },
-        "staticExecution": { "action_type": "charge" }
-      },
-      "create_invoice_item": {
-        "executionMapping": {
-          "amount": { "field": "amount", "divisor": 100 },
-          "currency": "currency"
-        },
-        "staticExecution": { "action_type": "charge" }
-      },
-      "create_refund": {
-        "executionMapping": {
-          "amount": { "field": "amount", "divisor": 100 }
-        },
-        "staticExecution": { "action_type": "refund" }
-      },
-      "create_subscription": {
-        "executionMapping": {},
-        "staticExecution": { "action_type": "subscribe" }
-      },
-      "cancel_subscription": {
-        "executionMapping": {},
-        "staticExecution": { "action_type": "subscribe" }
-      },
-      "update_subscription": {
-        "executionMapping": {},
-        "staticExecution": { "action_type": "subscribe" }
-      },
-      "retrieve_balance": null,
-      "list_invoices": null,
-      "list_subscriptions": null,
-      "list_payment_methods": null
-    }
-  }
+  "retention_minimum": 7776000
 }

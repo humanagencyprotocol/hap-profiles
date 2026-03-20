@@ -95,38 +95,5 @@
   },
 
   "ttl": { "default": 86400, "max": 86400 },
-  "retention_minimum": 7776000,
-
-  "toolGating": {
-    "default": {
-      "executionMapping": {},
-      "staticExecution": { "recipient_count": 0 }
-    },
-    "overrides": {
-      "send_message": {
-        "executionMapping": {
-          "to": "recipient_count"
-        },
-        "staticExecution": {}
-      },
-      "create_draft": {
-        "executionMapping": {
-          "to": "recipient_count"
-        },
-        "staticExecution": {}
-      },
-      "send_draft": {
-        "executionMapping": {},
-        "staticExecution": { "recipient_count": 1 }
-      },
-      "list_messages": null,
-      "get_message": null,
-      "get_attachment": null,
-      "list_drafts": null,
-      "get_draft": null,
-      "delete_draft": null,
-      "list_labels": null,
-      "get_profile": null
-    }
-  }
+  "retention_minimum": 7776000
 }
