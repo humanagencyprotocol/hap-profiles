@@ -1,0 +1,132 @@
+{
+  "id": "github.com/humanagencyprotocol/hap-profiles/email@0.4",
+  "name": "Email",
+  "version": "0.4",
+  "description": "Email authority — governs sending, drafting, and reading email via Gmail",
+
+  "boundsSchema": {
+    "keyOrder": ["profile", "path", "recipient_max", "send_daily_max", "read_max_age_days", "read_daily_max"],
+    "fields": {
+      "profile": { "type": "string", "required": true },
+      "path": { "type": "string", "required": true },
+      "recipient_max": {
+        "type": "number",
+        "required": false,
+        "description": "Maximum recipients per email (send/draft paths)",
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      },
+      "send_daily_max": {
+        "type": "number",
+        "required": false,
+        "description": "Maximum emails sent or drafted per day",
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      },
+      "read_max_age_days": {
+        "type": "number",
+        "required": false,
+        "description": "Maximum age in days for email search (read path)",
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      },
+      "read_daily_max": {
+        "type": "number",
+        "required": false,
+        "description": "Maximum emails read per day (read path)",
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      }
+    }
+  },
+
+  "contextSchema": {
+    "keyOrder": ["allowed_recipients", "allowed_domains"],
+    "fields": {
+      "allowed_recipients": {
+        "type": "string",
+        "required": false,
+        "description": "Comma-separated list of allowed email addresses"
+      },
+      "allowed_domains": {
+        "type": "string",
+        "required": false,
+        "description": "Comma-separated list of allowed recipient domains (e.g. acme.com,partner.org)"
+      }
+    }
+  },
+
+  "executionContextSchema": {
+    "fields": {
+      "recipient_count": {
+        "source": "declared",
+        "description": "Number of recipients in this email",
+        "required": true,
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      },
+      "send_count_daily": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "daily",
+        "description": "Running daily send/draft count (resolved from execution log)",
+        "required": true,
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      }
+    }
+  },
+
+  "executionPaths": {
+    "email-draft": {
+      "description": "Create email drafts for human review before sending",
+      "ttl": { "default": 86400, "max": 86400 }
+    },
+    "email-send": {
+      "description": "Send emails directly within authorized bounds",
+      "ttl": { "default": 14400, "max": 86400 }
+    },
+    "email-read": {
+      "description": "Read and search inbox within time and volume bounds",
+      "ttl": { "default": 86400, "max": 86400 }
+    }
+  },
+
+  "requiredGates": ["bounds", "problem", "objective", "tradeoff", "commitment", "decision_owner"],
+
+  "gateQuestions": {
+    "problem": { "question": "What problem does this email authority address?", "required": true },
+    "objective": { "question": "What outcome should this email authority enable?", "required": true },
+    "tradeoffs": { "question": "What risks do you accept with this email authority?", "required": true }
+  },
+
+  "ttl": { "default": 86400, "max": 86400 },
+  "retention_minimum": 7776000,
+
+  "toolGating": {
+    "default": {
+      "executionMapping": {},
+      "staticExecution": { "recipient_count": 0 }
+    },
+    "overrides": {
+      "send_message": {
+        "executionMapping": {
+          "to": "recipient_count"
+        },
+        "staticExecution": {}
+      },
+      "create_draft": {
+        "executionMapping": {
+          "to": "recipient_count"
+        },
+        "staticExecution": {}
+      },
+      "send_draft": {
+        "executionMapping": {},
+        "staticExecution": { "recipient_count": 1 }
+      },
+      "list_messages": null,
+      "get_message": null,
+      "get_attachment": null,
+      "list_drafts": null,
+      "get_draft": null,
+      "delete_draft": null,
+      "list_labels": null,
+      "get_profile": null
+    }
+  }
+}
