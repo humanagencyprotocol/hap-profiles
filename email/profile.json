@@ -42,12 +42,14 @@
       "allowed_recipients": {
         "type": "string",
         "required": false,
-        "description": "Comma-separated list of allowed email addresses"
+        "description": "Comma-separated list of allowed email addresses",
+        "constraint": { "type": "string", "enforceable": ["subset"] }
       },
       "allowed_domains": {
         "type": "string",
         "required": false,
-        "description": "Comma-separated list of allowed recipient domains (e.g. acme.com,partner.org)"
+        "description": "Comma-separated list of allowed recipient domains (e.g. acme.com,partner.org)",
+        "constraint": { "type": "string", "enforceable": ["subset"] }
       }
     }
   },
@@ -59,6 +61,18 @@
         "description": "Number of recipients in this email",
         "required": true,
         "constraint": { "type": "number", "enforceable": ["max"] }
+      },
+      "allowed_recipients": {
+        "source": "declared",
+        "description": "Comma-separated recipient addresses from this call (checked against context)",
+        "required": false,
+        "constraint": { "type": "string", "enforceable": ["subset"] }
+      },
+      "allowed_domains": {
+        "source": "declared",
+        "description": "Comma-separated unique recipient domains from this call (checked against context)",
+        "required": false,
+        "constraint": { "type": "string", "enforceable": ["subset"] }
       },
       "send_count_daily": {
         "source": "cumulative",
