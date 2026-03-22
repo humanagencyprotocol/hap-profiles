@@ -12,24 +12,28 @@
       "recipient_max": {
         "type": "number",
         "required": false,
+        "displayName": "Recipients per email",
         "description": "Maximum recipients per email (send/draft paths)",
         "constraint": { "type": "number", "enforceable": ["max"] }
       },
       "send_daily_max": {
         "type": "number",
         "required": false,
+        "displayName": "Daily send limit",
         "description": "Maximum emails sent or drafted per day",
         "constraint": { "type": "number", "enforceable": ["max"] }
       },
       "read_max_age_days": {
         "type": "number",
         "required": false,
+        "displayName": "Max email age (days)",
         "description": "Maximum age in days for email search (read path)",
         "constraint": { "type": "number", "enforceable": ["max"] }
       },
       "read_daily_max": {
         "type": "number",
         "required": false,
+        "displayName": "Daily read limit",
         "description": "Maximum emails read per day (read path)",
         "constraint": { "type": "number", "enforceable": ["max"] }
       }
@@ -42,12 +46,16 @@
       "allowed_recipients": {
         "type": "string",
         "required": false,
+        "displayName": "Allowed recipients",
+        "format": "email",
         "description": "Comma-separated list of allowed email addresses",
         "constraint": { "type": "string", "enforceable": ["subset"] }
       },
       "allowed_domains": {
         "type": "string",
         "required": false,
+        "displayName": "Allowed domains",
+        "format": "domain",
         "description": "Comma-separated list of allowed recipient domains (e.g. acme.com,partner.org)",
         "constraint": { "type": "string", "enforceable": ["subset"] }
       }

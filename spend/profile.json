@@ -12,24 +12,28 @@
       "amount_max": {
         "type": "number",
         "required": true,
+        "displayName": "Max per transaction",
         "description": "Maximum monetary amount per transaction in currency units",
         "constraint": { "type": "number", "enforceable": ["max"] }
       },
       "amount_daily_max": {
         "type": "number",
         "required": true,
+        "displayName": "Daily spending limit",
         "description": "Maximum cumulative spend per day in currency units",
         "constraint": { "type": "number", "enforceable": ["max"] }
       },
       "amount_monthly_max": {
         "type": "number",
         "required": true,
+        "displayName": "Monthly spending limit",
         "description": "Maximum cumulative spend per month in currency units",
         "constraint": { "type": "number", "enforceable": ["max"] }
       },
       "transaction_count_daily_max": {
         "type": "number",
         "required": true,
+        "displayName": "Daily transaction limit",
         "description": "Maximum number of transactions per day",
         "constraint": { "type": "number", "enforceable": ["max"] }
       }
@@ -42,6 +46,7 @@
       "currency": {
         "type": "string",
         "required": true,
+        "displayName": "Currency",
         "description": "Permitted currency code",
         "constraint": { "type": "string", "enforceable": ["enum"] },
         "enum": ["USD", "EUR", "GBP", "CHF", "JPY", "CAD", "AUD"]
@@ -49,6 +54,7 @@
       "action_type": {
         "type": "string",
         "required": true,
+        "displayName": "Action type",
         "description": "Authorized financial operation",
         "constraint": { "type": "string", "enforceable": ["enum"] },
         "enum": ["charge", "refund", "subscribe"]
