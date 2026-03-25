@@ -5,43 +5,22 @@
   "description": "Customer authority — governs CRM operations: contacts, activities, deals, tasks",
 
   "boundsSchema": {
-    "keyOrder": ["profile", "path", "contact_create_daily_max", "contact_modify_daily_max", "activity_create_daily_max", "deal_create_daily_max"],
+    "keyOrder": ["profile", "path", "write_daily_max"],
     "fields": {
       "profile": { "type": "string", "required": true },
       "path": { "type": "string", "required": true },
-      "contact_create_daily_max": {
+      "write_daily_max": {
         "type": "number",
         "required": true,
-        "displayName": "Daily contact creates",
-        "description": "Maximum new contacts created per day",
-        "constraint": { "type": "number", "enforceable": ["max"] }
-      },
-      "contact_modify_daily_max": {
-        "type": "number",
-        "required": true,
-        "displayName": "Daily contact updates",
-        "description": "Maximum contact updates per day",
-        "constraint": { "type": "number", "enforceable": ["max"] }
-      },
-      "activity_create_daily_max": {
-        "type": "number",
-        "required": true,
-        "displayName": "Daily activity logs",
-        "description": "Maximum activities logged per day",
-        "constraint": { "type": "number", "enforceable": ["max"] }
-      },
-      "deal_create_daily_max": {
-        "type": "number",
-        "required": true,
-        "displayName": "Daily deal creates",
-        "description": "Maximum new deals created per day",
+        "displayName": "Daily write limit",
+        "description": "Maximum CRM write operations per day (creates, updates, deletes)",
         "constraint": { "type": "number", "enforceable": ["max"] }
       }
     }
   },
 
   "contextSchema": {
-    "keyOrder": ["contact_type", "access_level"],
+    "keyOrder": ["contact_type"],
     "fields": {
       "contact_type": {
         "type": "string",
@@ -49,14 +28,6 @@
         "displayName": "Contact types",
         "description": "Permitted contact types (comma-separated: customer, lead, partner, vendor)",
         "constraint": { "type": "string", "enforceable": ["subset"] }
-      },
-      "access_level": {
-        "type": "string",
-        "required": true,
-        "displayName": "Access level",
-        "description": "Authorized access level",
-        "constraint": { "type": "string", "enforceable": ["enum"] },
-        "enum": ["read", "write"]
       }
     }
   },
@@ -69,41 +40,11 @@
         "required": true,
         "constraint": { "type": "string", "enforceable": ["subset"] }
       },
-      "access_level": {
-        "source": "declared",
-        "description": "Access level for this operation",
-        "required": true,
-        "constraint": { "type": "string", "enforceable": ["enum"] }
-      },
-      "contact_create_daily": {
+      "write_count_daily": {
         "source": "cumulative",
         "cumulativeField": "_count",
         "window": "daily",
-        "description": "Running daily contact creation count",
-        "required": true,
-        "constraint": { "type": "number", "enforceable": ["max"] }
-      },
-      "contact_modify_daily": {
-        "source": "cumulative",
-        "cumulativeField": "_count",
-        "window": "daily",
-        "description": "Running daily contact modification count",
-        "required": true,
-        "constraint": { "type": "number", "enforceable": ["max"] }
-      },
-      "activity_create_daily": {
-        "source": "cumulative",
-        "cumulativeField": "_count",
-        "window": "daily",
-        "description": "Running daily activity log count",
-        "required": true,
-        "constraint": { "type": "number", "enforceable": ["max"] }
-      },
-      "deal_create_daily": {
-        "source": "cumulative",
-        "cumulativeField": "_count",
-        "window": "daily",
-        "description": "Running daily deal creation count",
+        "description": "Running daily write operation count",
         "required": true,
         "constraint": { "type": "number", "enforceable": ["max"] }
       }
