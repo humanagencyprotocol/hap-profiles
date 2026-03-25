@@ -45,6 +45,30 @@ Governs charging customers: payments, refunds, subscriptions.
 
 ---
 
+### purchase — Purchase Authority
+
+Governs spending company money: subscriptions, supplies, services, advertising.
+
+| Bound | Type | Purpose |
+|-------|------|---------|
+| `spend_max` | per-transaction | Maximum spend amount |
+| `spend_daily_max` | cumulative | Daily spend cap |
+| `spend_monthly_max` | cumulative | Monthly spend cap |
+| `transaction_count_daily_max` | cumulative | Daily transaction limit |
+
+| Context | Type | Purpose |
+|---------|------|---------|
+| `currency` | enum | Permitted currencies |
+| `category` | enum | subscription, supply, service, advertising |
+| `allowed_vendors` | subset | Approved vendor names |
+
+| Path | Default TTL |
+|------|-------------|
+| `purchase-routine` | 24h |
+| `purchase-reviewed` | 4h |
+
+---
+
 ### email — Email Authority
 
 Governs sending, drafting, and reading email via Gmail.
@@ -69,65 +93,97 @@ Governs sending, drafting, and reading email via Gmail.
 
 ---
 
-### deploy — Deploy Authority
+### customers — Customer Management
 
-Governs which services an agent may deploy and to which environments.
+Governs CRM operations: contacts, activities, deals, tasks.
 
 | Bound | Type | Purpose |
 |-------|------|---------|
-| `deploy_daily_max` | cumulative | Daily deployment limit |
+| `contact_create_daily_max` | cumulative | Daily new contacts |
+| `contact_modify_daily_max` | cumulative | Daily contact updates |
+| `activity_create_daily_max` | cumulative | Daily activity logs |
+| `deal_create_daily_max` | cumulative | Daily new deals |
 
 | Context | Type | Purpose |
 |---------|------|---------|
-| `allowed_services` | subset | Permitted services |
-| `environment` | enum | sandbox, staging, production |
+| `contact_type` | subset | customer, lead, partner, vendor |
+| `access_level` | enum | read, write |
 
 | Path | Default TTL |
 |------|-------------|
-| `deploy-sandbox` | 24h |
-| `deploy-staging` | 8h |
-| `deploy-production` | 2h |
+| `customers-read` | 24h |
+| `customers-write` | 8h |
+| `customers-delete` | 2h |
 
 ---
 
-### data — Data Authority
+### schedule — Scheduling Authority
 
-Governs accessing and modifying business data: queries, schema changes, exports.
+Governs calendar access: reading, drafting, and booking events.
 
 | Bound | Type | Purpose |
 |-------|------|---------|
-| `access_level` | enum | read, write, admin |
-| `data_scope` | enum | public, internal, pii |
-| `scope` | enum | external (production) or internal (sandbox) |
+| `booking_daily_max` | cumulative | Daily new bookings |
+| `booking_duration_max` | per-event | Max event duration (minutes) |
+| `lookahead_days_max` | per-event | Max days into the future |
+
+| Context | Type | Purpose |
+|---------|------|---------|
+| `allowed_calendars` | subset | Permitted calendar names |
+| `allowed_attendees` | subset | Permitted attendee emails |
+| `allowed_domains` | subset | Permitted attendee domains |
+
+| Path | Default TTL |
+|------|-------------|
+| `schedule-read` | 24h |
+| `schedule-draft` | 24h |
+| `schedule-book` | 4h |
+
+---
+
+### publish — Content Publishing
+
+Governs posting public content to social media, blogs, and other platforms.
+
+| Bound | Type | Purpose |
+|-------|------|---------|
+| `post_daily_max` | cumulative | Daily post limit |
+| `post_monthly_max` | cumulative | Monthly post limit |
+
+| Context | Type | Purpose |
+|---------|------|---------|
+| `allowed_platforms` | subset | twitter, linkedin, instagram, blog, medium |
+| `content_type` | enum | text, image, link, thread |
+| `audience` | enum | public, followers, connections |
+
+| Path | Default TTL |
+|------|-------------|
+| `publish-draft` | 24h |
+| `publish-post` | 4h |
+
+---
+
+### records — Records Authority
+
+Governs accessing and modifying personal structured data: queries, schema changes, exports. Renamed from `data` — for personal databases and spreadsheet replacements, not shared CRM data.
+
+| Bound | Type | Purpose |
+|-------|------|---------|
 | `row_limit_max` | per-query | Maximum rows returned |
 | `query_count_daily_max` | cumulative | Daily query limit |
 | `export_row_count_daily_max` | cumulative | Daily exported row limit |
 
-| Path | Default TTL |
-|------|-------------|
-| `data-read` | 8h |
-| `data-write` | 2h |
-| `data-export` | 1h |
-
----
-
-### provision — Infrastructure Authority
-
-Governs creating, modifying, or destroying infrastructure: DNS, compute, storage, secrets.
-
-| Bound | Type | Purpose |
-|-------|------|---------|
-| `resource_type` | enum | dns, compute, storage, secret |
-| `action_type` | enum | create, modify, delete |
-| `scope` | enum | external (production) or internal (dev/sandbox) |
-| `blast_radius` | enum | single, service, global |
-| `change_count_daily_max` | cumulative | Daily change limit |
+| Context | Type | Purpose |
+|---------|------|---------|
+| `access_level` | enum | read, write, admin |
+| `data_scope` | enum | public, internal, pii |
+| `scope` | enum | external (production), internal (sandbox) |
 
 | Path | Default TTL |
 |------|-------------|
-| `provision-internal` | 8h |
-| `provision-external` | 2h |
-| `provision-destructive` | 1h |
+| `records-read` | 8h |
+| `records-write` | 2h |
+| `records-export` | 1h |
 
 ---
 

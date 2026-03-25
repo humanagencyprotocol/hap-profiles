@@ -2,9 +2,11 @@
   "repository": "github.com/humanagencyprotocol/hap-profiles",
   "profiles": {
     "github.com/humanagencyprotocol/hap-profiles/charge@0.4": "charge/profile.json",
-    "github.com/humanagencyprotocol/hap-profiles/deploy@0.4": "deploy/profile.json",
-    "github.com/humanagencyprotocol/hap-profiles/data@0.4": "data/profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/purchase@0.4": "purchase/profile.json",
     "github.com/humanagencyprotocol/hap-profiles/email@0.4": "email/profile.json",
-    "github.com/humanagencyprotocol/hap-profiles/provision@0.4": "provision/profile.json"
+    "github.com/humanagencyprotocol/hap-profiles/customers@0.4": "customers/profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/schedule@0.4": "schedule/profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/publish@0.4": "publish/profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/records@0.4": "records/profile.json"
   }
 }

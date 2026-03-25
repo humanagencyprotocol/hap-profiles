@@ -1,0 +1,138 @@
+{
+  "id": "github.com/humanagencyprotocol/hap-profiles/customers@0.4",
+  "name": "Customer Management",
+  "version": "0.4",
+  "description": "Customer authority — governs CRM operations: contacts, activities, deals, tasks",
+
+  "boundsSchema": {
+    "keyOrder": ["profile", "path", "contact_create_daily_max", "contact_modify_daily_max", "activity_create_daily_max", "deal_create_daily_max"],
+    "fields": {
+      "profile": { "type": "string", "required": true },
+      "path": { "type": "string", "required": true },
+      "contact_create_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Daily contact creates",
+        "description": "Maximum new contacts created per day",
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      },
+      "contact_modify_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Daily contact updates",
+        "description": "Maximum contact updates per day",
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      },
+      "activity_create_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Daily activity logs",
+        "description": "Maximum activities logged per day",
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      },
+      "deal_create_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Daily deal creates",
+        "description": "Maximum new deals created per day",
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      }
+    }
+  },
+
+  "contextSchema": {
+    "keyOrder": ["contact_type", "access_level"],
+    "fields": {
+      "contact_type": {
+        "type": "string",
+        "required": true,
+        "displayName": "Contact types",
+        "description": "Permitted contact types (comma-separated: customer, lead, partner, vendor)",
+        "constraint": { "type": "string", "enforceable": ["subset"] }
+      },
+      "access_level": {
+        "type": "string",
+        "required": true,
+        "displayName": "Access level",
+        "description": "Authorized access level",
+        "constraint": { "type": "string", "enforceable": ["enum"] },
+        "enum": ["read", "write"]
+      }
+    }
+  },
+
+  "executionContextSchema": {
+    "fields": {
+      "contact_type": {
+        "source": "declared",
+        "description": "Contact type being accessed",
+        "required": true,
+        "constraint": { "type": "string", "enforceable": ["subset"] }
+      },
+      "access_level": {
+        "source": "declared",
+        "description": "Access level for this operation",
+        "required": true,
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "contact_create_daily": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "daily",
+        "description": "Running daily contact creation count",
+        "required": true,
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      },
+      "contact_modify_daily": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "daily",
+        "description": "Running daily contact modification count",
+        "required": true,
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      },
+      "activity_create_daily": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "daily",
+        "description": "Running daily activity log count",
+        "required": true,
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      },
+      "deal_create_daily": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "daily",
+        "description": "Running daily deal creation count",
+        "required": true,
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      }
+    }
+  },
+
+  "executionPaths": {
+    "customers-read": {
+      "description": "View contacts, activities, deals, pipeline, and tasks",
+      "ttl": { "default": 86400, "max": 86400 }
+    },
+    "customers-write": {
+      "description": "Create and update contacts, log activities, manage deals and tasks",
+      "ttl": { "default": 28800, "max": 86400 }
+    },
+    "customers-delete": {
+      "description": "Delete contacts, deals, and associated records",
+      "ttl": { "default": 7200, "max": 86400 }
+    }
+  },
+
+  "requiredGates": ["bounds", "problem", "objective", "tradeoff", "commitment", "decision_owner"],
+
+  "gateQuestions": {
+    "problem": { "question": "What problem does this customer management authority address?", "required": true },
+    "objective": { "question": "What outcome should this customer authority enable?", "required": true },
+    "tradeoffs": { "question": "What risks do you accept with this customer data authority?", "required": true }
+  },
+
+  "ttl": { "default": 86400, "max": 86400 },
+  "retention_minimum": 7776000
+}

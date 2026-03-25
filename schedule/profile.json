@@ -1,0 +1,133 @@
+{
+  "id": "github.com/humanagencyprotocol/hap-profiles/schedule@0.4",
+  "name": "Scheduling",
+  "version": "0.4",
+  "description": "Scheduling authority — governs calendar access: reading, drafting, and booking events",
+
+  "boundsSchema": {
+    "keyOrder": ["profile", "path", "booking_daily_max", "booking_duration_max", "lookahead_days_max"],
+    "fields": {
+      "profile": { "type": "string", "required": true },
+      "path": { "type": "string", "required": true },
+      "booking_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Daily booking limit",
+        "description": "Maximum new events booked per day",
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      },
+      "booking_duration_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Max event duration (minutes)",
+        "description": "Maximum duration of a single event in minutes",
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      },
+      "lookahead_days_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Max lookahead (days)",
+        "description": "Maximum number of days into the future an event can be booked",
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      }
+    }
+  },
+
+  "contextSchema": {
+    "keyOrder": ["allowed_calendars", "allowed_attendees", "allowed_domains"],
+    "fields": {
+      "allowed_calendars": {
+        "type": "string",
+        "required": false,
+        "displayName": "Allowed calendars",
+        "description": "Comma-separated list of calendar names the agent may access",
+        "constraint": { "type": "string", "enforceable": ["subset"] }
+      },
+      "allowed_attendees": {
+        "type": "string",
+        "required": false,
+        "displayName": "Allowed attendees",
+        "format": "email",
+        "description": "Comma-separated list of allowed attendee email addresses",
+        "constraint": { "type": "string", "enforceable": ["subset"] }
+      },
+      "allowed_domains": {
+        "type": "string",
+        "required": false,
+        "displayName": "Allowed domains",
+        "format": "domain",
+        "description": "Comma-separated list of allowed attendee domains (e.g. acme.com,partner.org)",
+        "constraint": { "type": "string", "enforceable": ["subset"] }
+      }
+    }
+  },
+
+  "executionContextSchema": {
+    "fields": {
+      "duration": {
+        "source": "declared",
+        "description": "Duration of the event in minutes",
+        "required": true,
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      },
+      "lookahead": {
+        "source": "declared",
+        "description": "Days from now the event is scheduled",
+        "required": true,
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      },
+      "allowed_calendars": {
+        "source": "declared",
+        "description": "Calendar being used (checked against authorized calendars)",
+        "required": false,
+        "constraint": { "type": "string", "enforceable": ["subset"] }
+      },
+      "allowed_attendees": {
+        "source": "declared",
+        "description": "Attendee addresses from this event (checked against authorized attendees)",
+        "required": false,
+        "constraint": { "type": "string", "enforceable": ["subset"] }
+      },
+      "allowed_domains": {
+        "source": "declared",
+        "description": "Unique attendee domains from this event (checked against authorized domains)",
+        "required": false,
+        "constraint": { "type": "string", "enforceable": ["subset"] }
+      },
+      "booking_count_daily": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "daily",
+        "description": "Running daily booking count (resolved from execution log)",
+        "required": true,
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      }
+    }
+  },
+
+  "executionPaths": {
+    "schedule-read": {
+      "description": "Read calendar events and check availability",
+      "ttl": { "default": 86400, "max": 86400 }
+    },
+    "schedule-draft": {
+      "description": "Create tentative events for human review",
+      "ttl": { "default": 86400, "max": 86400 }
+    },
+    "schedule-book": {
+      "description": "Directly book, modify, or cancel events",
+      "ttl": { "default": 14400, "max": 86400 }
+    }
+  },
+
+  "requiredGates": ["bounds", "problem", "objective", "tradeoff", "commitment", "decision_owner"],
+
+  "gateQuestions": {
+    "problem": { "question": "What problem does this scheduling authority address?", "required": true },
+    "objective": { "question": "What outcome should this scheduling authority enable?", "required": true },
+    "tradeoffs": { "question": "What risks do you accept with this scheduling authority?", "required": true }
+  },
+
+  "ttl": { "default": 86400, "max": 86400 },
+  "retention_minimum": 7776000
+}
