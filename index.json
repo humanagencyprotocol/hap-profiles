@@ -1,8 +1,8 @@
 {
   "repository": "github.com/humanagencyprotocol/hap-profiles",
   "profiles": {
-    "github.com/humanagencyprotocol/hap-profiles/spend@0.4": "spend/profile.json",
-    "github.com/humanagencyprotocol/hap-profiles/ship@0.4": "ship/profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/charge@0.4": "charge/profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/deploy@0.4": "deploy/profile.json",
     "github.com/humanagencyprotocol/hap-profiles/data@0.4": "data/profile.json",
     "github.com/humanagencyprotocol/hap-profiles/email@0.4": "email/profile.json",
     "github.com/humanagencyprotocol/hap-profiles/provision@0.4": "provision/profile.json"

@@ -1,0 +1,93 @@
+{
+  "id": "github.com/humanagencyprotocol/hap-profiles/deploy@0.4",
+  "name": "Deploy",
+  "version": "0.4",
+  "description": "Deployment authority — governs which services an agent may deploy and to which environments",
+
+  "boundsSchema": {
+    "keyOrder": ["profile", "path", "deploy_daily_max"],
+    "fields": {
+      "profile": { "type": "string", "required": true },
+      "path": { "type": "string", "required": true },
+      "deploy_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Daily deploy limit",
+        "description": "Maximum number of deployments per day",
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      }
+    }
+  },
+
+  "contextSchema": {
+    "keyOrder": ["allowed_services", "environment"],
+    "fields": {
+      "allowed_services": {
+        "type": "string",
+        "required": true,
+        "displayName": "Allowed services",
+        "description": "Comma-separated list of services the agent may deploy (e.g. api,web,worker)",
+        "constraint": { "type": "string", "enforceable": ["subset"] }
+      },
+      "environment": {
+        "type": "string",
+        "required": true,
+        "displayName": "Environment",
+        "description": "Target environment",
+        "constraint": { "type": "string", "enforceable": ["enum"] },
+        "enum": ["sandbox", "staging", "production"]
+      }
+    }
+  },
+
+  "executionContextSchema": {
+    "fields": {
+      "service": {
+        "source": "declared",
+        "description": "Service being deployed",
+        "required": true,
+        "constraint": { "type": "string", "enforceable": ["subset"] }
+      },
+      "environment": {
+        "source": "declared",
+        "description": "Target environment for this deployment",
+        "required": true,
+        "constraint": { "type": "string", "enforceable": ["enum"] }
+      },
+      "deploy_count_daily": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "daily",
+        "description": "Running daily deployment count (resolved from execution log)",
+        "required": true,
+        "constraint": { "type": "number", "enforceable": ["max"] }
+      }
+    }
+  },
+
+  "executionPaths": {
+    "deploy-sandbox": {
+      "description": "Deploy to isolated sandbox environments",
+      "ttl": { "default": 86400, "max": 86400 }
+    },
+    "deploy-staging": {
+      "description": "Deploy to shared staging environment",
+      "ttl": { "default": 28800, "max": 86400 }
+    },
+    "deploy-production": {
+      "description": "Deploy to production",
+      "ttl": { "default": 7200, "max": 86400 }
+    }
+  },
+
+  "requiredGates": ["bounds", "problem", "objective", "tradeoff", "commitment", "decision_owner"],
+
+  "gateQuestions": {
+    "problem": { "question": "What user-facing behavior should change after this deployment?", "required": true },
+    "objective": { "question": "How will you know the deployment succeeded?", "required": true },
+    "tradeoffs": { "question": "What breaks if this deployment fails, and how do you recover?", "required": true }
+  },
+
+  "ttl": { "default": 28800, "max": 86400 },
+  "retention_minimum": 7776000
+}

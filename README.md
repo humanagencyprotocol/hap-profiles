@@ -2,7 +2,7 @@
 
 Authorization templates for the [Human Agency Protocol](https://humanagencyprotocol.org). Each profile defines what an AI agent is allowed to do within a specific domain — the bounds a human sets, and the Gatekeeper enforces.
 
-> **Version 0.3** — March 2026
+> **Version 0.4** — March 2026
 
 ---
 
@@ -10,78 +10,83 @@ Authorization templates for the [Human Agency Protocol](https://humanagencyproto
 
 A profile is a complete authorization schema. It specifies:
 
-- **Frame schema** — the bounds a human commits to (e.g., max amount, allowed currencies)
+- **Bounds schema** — the limits a human commits to (e.g., max amount, allowed currencies)
+- **Context schema** — local parameters that stay encrypted (e.g., allowed services, environment)
 - **Execution context** — what the Gatekeeper checks at runtime, including cumulative limits
 - **Execution paths** — governance tiers with required domain owners and TTLs
 - **Gates** — the structured questions a human must answer before authorization
-- **Tool gating** — how MCP tool arguments map to execution context fields
 
-Profiles are referenced by ID (e.g., `spend@0.3`) and are immutable once published.
+Profiles are referenced by ID (e.g., `charge@0.4`) and are immutable once published.
 
 ---
 
 ## Profiles
 
-### spend — Financial Authority
+### charge — Charge Authority
 
-Governs committing company money: charges, refunds, subscriptions.
+Governs charging customers: payments, refunds, subscriptions.
 
 | Bound | Type | Purpose |
 |-------|------|---------|
 | `amount_max` | per-transaction | Maximum monetary amount |
-| `currency` | enum | Permitted currencies |
-| `action_type` | enum | charge, refund, subscribe |
-| `amount_daily_max` | cumulative | Daily spend cap |
-| `amount_monthly_max` | cumulative | Monthly spend cap |
+| `amount_daily_max` | cumulative | Daily charge cap |
+| `amount_monthly_max` | cumulative | Monthly charge cap |
 | `transaction_count_daily_max` | cumulative | Daily transaction limit |
 
-| Path | Required Domains | Default TTL |
-|------|-----------------|-------------|
-| `spend-routine` | finance | 24h |
-| `spend-reviewed` | finance, compliance | 4h |
+| Context | Type | Purpose |
+|---------|------|---------|
+| `currency` | enum | Permitted currencies |
+| `action_type` | enum | charge, refund, subscribe |
 
-Tool gating maps Stripe MCP tools — `create_payment_link`, `create_invoice_item`, `create_refund` — to the execution context. Read-only tools (`list_customers`, `retrieve_balance`) are ungated.
-
----
-
-### ship — Deployment Authority
-
-Governs what runs in production: merges, deployments, rollbacks.
-
-| Bound | Type | Purpose |
-|-------|------|---------|
-| `repository` | enum | Authorized repositories |
-| `scope` | enum | external (production) or internal (staging) |
-| `action_type` | enum | merge, deploy, rollback |
-| `deploy_count_daily_max` | cumulative | Daily deployment limit |
-
-| Path | Required Domains | Default TTL |
-|------|-----------------|-------------|
-| `ship-internal` | engineering | 8h |
-| `ship-external` | engineering, release_management | 2h |
-
-Tool gating maps GitHub MCP tools — `merge_pull_request`, `create_or_update_file` — to the execution context. Read-only tools (`list_issues`, `get_file_contents`) are ungated.
+| Path | Default TTL |
+|------|-------------|
+| `charge-routine` | 24h |
+| `charge-reviewed` | 4h |
 
 ---
 
-### publish — Communication Authority
+### email — Email Authority
 
-Governs sending anything externally as the company: emails, notifications, webhooks.
+Governs sending, drafting, and reading email via Gmail.
 
 | Bound | Type | Purpose |
 |-------|------|---------|
-| `channel` | enum | email, webhook, notification |
-| `audience` | enum | individual, segment, all |
-| `recipient_max` | per-operation | Maximum recipients per send |
-| `scope` | enum | external (real customers) or internal (test accounts) |
-| `send_count_daily_max` | cumulative | Daily send limit |
-| `send_count_monthly_max` | cumulative | Monthly send limit |
+| `recipient_max` | per-email | Maximum recipients |
+| `send_daily_max` | cumulative | Daily send/draft limit |
+| `read_max_age_days` | per-query | Max email age for search |
+| `read_daily_max` | cumulative | Daily read limit |
 
-| Path | Required Domains | Default TTL |
-|------|-----------------|-------------|
-| `publish-transactional` | engineering | 24h |
-| `publish-marketing` | marketing, product | 2h |
-| `publish-all-users` | marketing, product, compliance | 1h |
+| Context | Type | Purpose |
+|---------|------|---------|
+| `allowed_recipients` | subset | Permitted email addresses |
+| `allowed_domains` | subset | Permitted recipient domains |
+
+| Path | Default TTL |
+|------|-------------|
+| `email-draft` | 24h |
+| `email-send` | 4h |
+| `email-read` | 24h |
+
+---
+
+### deploy — Deploy Authority
+
+Governs which services an agent may deploy and to which environments.
+
+| Bound | Type | Purpose |
+|-------|------|---------|
+| `deploy_daily_max` | cumulative | Daily deployment limit |
+
+| Context | Type | Purpose |
+|---------|------|---------|
+| `allowed_services` | subset | Permitted services |
+| `environment` | enum | sandbox, staging, production |
+
+| Path | Default TTL |
+|------|-------------|
+| `deploy-sandbox` | 24h |
+| `deploy-staging` | 8h |
+| `deploy-production` | 2h |
 
 ---
 
@@ -98,11 +103,11 @@ Governs accessing and modifying business data: queries, schema changes, exports.
 | `query_count_daily_max` | cumulative | Daily query limit |
 | `export_row_count_daily_max` | cumulative | Daily exported row limit |
 
-| Path | Required Domains | Default TTL |
-|------|-----------------|-------------|
-| `data-read` | engineering | 8h |
-| `data-write` | engineering, data_owner | 2h |
-| `data-export` | data_owner, compliance | 1h |
+| Path | Default TTL |
+|------|-------------|
+| `data-read` | 8h |
+| `data-write` | 2h |
+| `data-export` | 1h |
 
 ---
 
@@ -118,17 +123,17 @@ Governs creating, modifying, or destroying infrastructure: DNS, compute, storage
 | `blast_radius` | enum | single, service, global |
 | `change_count_daily_max` | cumulative | Daily change limit |
 
-| Path | Required Domains | Default TTL |
-|------|-----------------|-------------|
-| `provision-internal` | engineering | 8h |
-| `provision-external` | platform, engineering | 2h |
-| `provision-destructive` | platform, engineering, security | 1h |
+| Path | Default TTL |
+|------|-------------|
+| `provision-internal` | 8h |
+| `provision-external` | 2h |
+| `provision-destructive` | 1h |
 
 ---
 
 ## How Profiles Work
 
-A human creates an authorization by selecting a profile and execution path, setting the bounds (frame), and answering the gate questions. Domain owners cryptographically attest to the frame. The Gatekeeper then enforces those bounds on every tool call:
+A human creates an authorization by selecting a profile and execution path, setting the bounds, and answering the gate questions. Domain owners cryptographically attest to the bounds. The Gatekeeper then enforces those bounds on every tool call:
 
 ```
 Human sets bounds          Agent requests execution        Gatekeeper checks
@@ -139,7 +144,7 @@ amount_daily_max: 500      amount_daily: 423 (from log)   423 + 5 <= 500, approv
 
 If any bound is exceeded, the Gatekeeper blocks execution.
 
-All profiles require the same six gates: frame, problem, objective, tradeoff, commitment, and decision owner.
+All profiles require the same six gates: bounds, problem, objective, tradeoff, commitment, and decision owner.
 
 ---
 
