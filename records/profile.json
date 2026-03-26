@@ -2,106 +2,31 @@
   "id": "github.com/humanagencyprotocol/hap-profiles/records@0.4",
   "name": "Records",
   "version": "0.4",
-  "description": "Records authority — governs accessing and modifying personal structured data: queries, schema changes, exports",
+  "description": "Records authority — governs accessing and modifying personal structured data",
 
   "boundsSchema": {
-    "keyOrder": ["profile", "path", "row_limit_max", "query_count_daily_max", "export_row_count_daily_max"],
+    "keyOrder": ["profile", "path", "write_daily_max"],
     "fields": {
       "profile": { "type": "string", "required": true },
       "path": { "type": "string", "required": true },
-      "row_limit_max": {
+      "write_daily_max": {
         "type": "number",
         "required": true,
-        "displayName": "Row limit per query",
-        "description": "Maximum rows returned per query",
+        "displayName": "Daily write limit",
+        "description": "Maximum write operations per day",
+        "paths": ["records-write"],
         "constraint": { "type": "number", "enforceable": ["max"] }
-      },
-      "query_count_daily_max": {
-        "type": "number",
-        "required": true,
-        "displayName": "Daily query limit",
-        "description": "Maximum queries per day",
-        "constraint": { "type": "number", "enforceable": ["max"] }
-      },
-      "export_row_count_daily_max": {
-        "type": "number",
-        "required": true,
-        "displayName": "Daily export row limit",
-        "description": "Maximum exported rows per day",
-        "constraint": { "type": "number", "enforceable": ["max"] }
-      }
-    }
-  },
-
-  "contextSchema": {
-    "keyOrder": ["access_level", "data_scope", "scope"],
-    "fields": {
-      "access_level": {
-        "type": "string",
-        "required": true,
-        "displayName": "Access level",
-        "description": "Authorized access level",
-        "constraint": { "type": "string", "enforceable": ["enum"] },
-        "enum": ["read", "write", "admin"]
-      },
-      "data_scope": {
-        "type": "string",
-        "required": true,
-        "displayName": "Data scope",
-        "description": "Data scope authorization",
-        "constraint": { "type": "string", "enforceable": ["enum"] },
-        "enum": ["public", "internal", "pii"]
-      },
-      "scope": {
-        "type": "string",
-        "required": true,
-        "displayName": "Impact scope",
-        "description": "Impact scope (external = production data, internal = sandbox/test data)",
-        "constraint": { "type": "string", "enforceable": ["enum"] },
-        "enum": ["external", "internal"]
       }
     }
   },
 
   "executionContextSchema": {
     "fields": {
-      "access_level": {
-        "source": "declared",
-        "description": "Access level for this operation",
-        "required": true,
-        "constraint": { "type": "string", "enforceable": ["enum"] }
-      },
-      "data_scope": {
-        "source": "declared",
-        "description": "Data scope being accessed",
-        "required": true,
-        "constraint": { "type": "string", "enforceable": ["enum"] }
-      },
-      "scope": {
-        "source": "declared",
-        "description": "Impact scope of this data operation",
-        "required": true,
-        "constraint": { "type": "string", "enforceable": ["enum"] }
-      },
-      "row_limit": {
-        "source": "declared",
-        "description": "Number of rows in this query result",
-        "required": true,
-        "constraint": { "type": "number", "enforceable": ["max"] }
-      },
-      "query_count_daily": {
+      "write_count_daily": {
         "source": "cumulative",
         "cumulativeField": "_count",
         "window": "daily",
-        "description": "Running daily query count (resolved from execution log)",
-        "required": true,
-        "constraint": { "type": "number", "enforceable": ["max"] }
-      },
-      "export_row_count_daily": {
-        "source": "cumulative",
-        "cumulativeField": "row_limit",
-        "window": "daily",
-        "description": "Running daily exported row count (resolved from execution log)",
+        "description": "Running daily write operation count",
         "required": true,
         "constraint": { "type": "number", "enforceable": ["max"] }
       }
@@ -110,16 +35,12 @@
 
   "executionPaths": {
     "records-read": {
-      "description": "Read-only queries against personal data",
+      "description": "Search and read personal records",
       "ttl": { "default": 28800, "max": 86400 }
     },
     "records-write": {
-      "description": "Create and modify personal records",
+      "description": "Create, update, and archive personal records",
       "ttl": { "default": 7200, "max": 86400 }
-    },
-    "records-export": {
-      "description": "Bulk exports of personal data",
-      "ttl": { "default": 3600, "max": 86400 }
     }
   },
 

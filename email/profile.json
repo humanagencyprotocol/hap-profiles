@@ -13,7 +13,8 @@
         "type": "number",
         "required": false,
         "displayName": "Recipients per email",
-        "description": "Maximum recipients per email (send/draft paths)",
+        "description": "Maximum recipients per email",
+        "paths": ["email-send", "email-draft"],
         "constraint": { "type": "number", "enforceable": ["max"] }
       },
       "send_daily_max": {
@@ -21,20 +22,23 @@
         "required": false,
         "displayName": "Daily send limit",
         "description": "Maximum emails sent or drafted per day",
+        "paths": ["email-send", "email-draft"],
         "constraint": { "type": "number", "enforceable": ["max"] }
       },
       "read_max_age_days": {
         "type": "number",
         "required": false,
         "displayName": "Max email age (days)",
-        "description": "Maximum age in days for email search (read path)",
+        "description": "Maximum age in days for email search",
+        "paths": ["email-read"],
         "constraint": { "type": "number", "enforceable": ["max"] }
       },
       "read_daily_max": {
         "type": "number",
         "required": false,
         "displayName": "Daily read limit",
-        "description": "Maximum emails read per day (read path)",
+        "description": "Maximum emails read per day",
+        "paths": ["email-read"],
         "constraint": { "type": "number", "enforceable": ["max"] }
       }
     }
