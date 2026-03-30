@@ -2,85 +2,155 @@
   "id": "github.com/humanagencyprotocol/hap-profiles/charge@0.4",
   "name": "Charge",
   "version": "0.4",
-  "description": "Charge authority — governs charging customers: payments, refunds, subscriptions",
-
+  "description": "Charge authority \u2014 governs charging customers: payments, refunds, subscriptions",
   "boundsSchema": {
-    "keyOrder": ["profile", "path", "amount_max", "amount_daily_max", "amount_monthly_max", "transaction_count_daily_max"],
+    "keyOrder": [
+      "profile",
+      "path",
+      "amount_max",
+      "amount_daily_max",
+      "amount_monthly_max",
+      "transaction_count_daily_max"
+    ],
     "fields": {
-      "profile": { "type": "string", "required": true },
-      "path": { "type": "string", "required": true },
+      "profile": {
+        "type": "string",
+        "required": true
+      },
+      "path": {
+        "type": "string",
+        "required": true
+      },
       "amount_max": {
         "type": "number",
         "required": true,
         "displayName": "Max per transaction",
         "description": "Maximum monetary amount per transaction in currency units",
-        "constraint": { "type": "number", "enforceable": ["max"] }
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
       },
       "amount_daily_max": {
         "type": "number",
         "required": true,
         "displayName": "Daily charge limit",
         "description": "Maximum cumulative charges per day in currency units",
-        "constraint": { "type": "number", "enforceable": ["max"] }
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
       },
       "amount_monthly_max": {
         "type": "number",
         "required": true,
         "displayName": "Monthly charge limit",
         "description": "Maximum cumulative charges per month in currency units",
-        "constraint": { "type": "number", "enforceable": ["max"] }
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
       },
       "transaction_count_daily_max": {
         "type": "number",
         "required": true,
         "displayName": "Daily transaction limit",
         "description": "Maximum number of transactions per day",
-        "constraint": { "type": "number", "enforceable": ["max"] }
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
       }
     }
   },
-
   "contextSchema": {
-    "keyOrder": ["currency", "action_type"],
+    "keyOrder": [
+      "currency",
+      "action_type"
+    ],
     "fields": {
       "currency": {
         "type": "string",
         "required": true,
         "displayName": "Currency",
         "description": "Permitted currency code",
-        "constraint": { "type": "string", "enforceable": ["enum"] },
-        "enum": ["USD", "EUR", "GBP", "CHF", "JPY", "CAD", "AUD"]
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "enum"
+          ]
+        },
+        "enum": [
+          "USD",
+          "EUR",
+          "GBP",
+          "CHF",
+          "JPY",
+          "CAD",
+          "AUD"
+        ]
       },
       "action_type": {
         "type": "string",
         "required": true,
         "displayName": "Action type",
         "description": "Authorized financial operation",
-        "constraint": { "type": "string", "enforceable": ["enum"] },
-        "enum": ["charge", "refund", "subscribe"]
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "enum"
+          ]
+        },
+        "enum": [
+          "charge",
+          "refund",
+          "subscribe"
+        ]
       }
     }
   },
-
   "executionContextSchema": {
     "fields": {
       "action_type": {
         "source": "declared",
         "description": "Financial operation being performed",
         "required": true,
-        "constraint": { "type": "string", "enforceable": ["enum"] }
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "enum"
+          ]
+        }
       },
       "amount": {
         "source": "declared",
         "description": "Monetary amount in currency units",
         "required": true,
-        "constraint": { "type": "number", "enforceable": ["max"] }
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
       },
       "currency": {
         "source": "declared",
         "description": "Currency code",
         "required": true,
-        "constraint": { "type": "string", "enforceable": ["enum"] }
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "enum"
+          ]
+        }
       },
       "amount_daily": {
         "source": "cumulative",
@@ -88,7 +158,12 @@
         "window": "daily",
         "description": "Running daily charge total (resolved from execution log)",
         "required": true,
-        "constraint": { "type": "number", "enforceable": ["max"] }
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
       },
       "amount_monthly": {
         "source": "cumulative",
@@ -96,7 +171,12 @@
         "window": "monthly",
         "description": "Running monthly charge total (resolved from execution log)",
         "required": true,
-        "constraint": { "type": "number", "enforceable": ["max"] }
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
       },
       "transaction_count_daily": {
         "source": "cumulative",
@@ -104,30 +184,56 @@
         "window": "daily",
         "description": "Running daily transaction count (resolved from execution log)",
         "required": true,
-        "constraint": { "type": "number", "enforceable": ["max"] }
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
       }
     }
   },
-
   "executionPaths": {
     "charge-routine": {
       "description": "Day-to-day financial transactions within authorized bounds",
-      "ttl": { "default": 86400, "max": 86400 }
+      "ttl": {
+        "default": 86400,
+        "max": 2592000
+      }
     },
     "charge-reviewed": {
       "description": "Large or unusual transactions requiring dual authorization",
-      "ttl": { "default": 14400, "max": 86400 }
+      "ttl": {
+        "default": 14400,
+        "max": 2592000
+      }
     }
   },
-
-  "requiredGates": ["bounds", "problem", "objective", "tradeoff", "commitment", "decision_owner"],
-
+  "requiredGates": [
+    "bounds",
+    "problem",
+    "objective",
+    "tradeoff",
+    "commitment",
+    "decision_owner"
+  ],
   "gateQuestions": {
-    "problem": { "question": "What problem does this charge authority address?", "required": true },
-    "objective": { "question": "What outcome should this charge authority enable?", "required": true },
-    "tradeoffs": { "question": "What financial risks do you accept with this authority?", "required": true }
+    "problem": {
+      "question": "What problem does this charge authority address?",
+      "required": true
+    },
+    "objective": {
+      "question": "What outcome should this charge authority enable?",
+      "required": true
+    },
+    "tradeoffs": {
+      "question": "What financial risks do you accept with this authority?",
+      "required": true
+    }
   },
-
-  "ttl": { "default": 86400, "max": 86400 },
+  "ttl": {
+    "default": 86400,
+    "max": 2592000
+  },
   "retention_minimum": 7776000
 }

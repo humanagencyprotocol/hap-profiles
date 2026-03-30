@@ -2,24 +2,39 @@
   "id": "github.com/humanagencyprotocol/hap-profiles/records@0.4",
   "name": "Records",
   "version": "0.4",
-  "description": "Records authority — governs accessing and modifying personal structured data",
-
+  "description": "Records authority \u2014 governs accessing and modifying personal structured data",
   "boundsSchema": {
-    "keyOrder": ["profile", "path", "write_daily_max"],
+    "keyOrder": [
+      "profile",
+      "path",
+      "write_daily_max"
+    ],
     "fields": {
-      "profile": { "type": "string", "required": true },
-      "path": { "type": "string", "required": true },
+      "profile": {
+        "type": "string",
+        "required": true
+      },
+      "path": {
+        "type": "string",
+        "required": true
+      },
       "write_daily_max": {
         "type": "number",
         "required": true,
         "displayName": "Daily write limit",
         "description": "Maximum write operations per day",
-        "paths": ["records-write"],
-        "constraint": { "type": "number", "enforceable": ["max"] }
+        "paths": [
+          "records-write"
+        ],
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
       }
     }
   },
-
   "executionContextSchema": {
     "fields": {
       "write_count_daily": {
@@ -28,30 +43,56 @@
         "window": "daily",
         "description": "Running daily write operation count",
         "required": true,
-        "constraint": { "type": "number", "enforceable": ["max"] }
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
       }
     }
   },
-
   "executionPaths": {
     "records-read": {
       "description": "Search and read personal records",
-      "ttl": { "default": 28800, "max": 86400 }
+      "ttl": {
+        "default": 28800,
+        "max": 31536000
+      }
     },
     "records-write": {
       "description": "Create, update, and archive personal records",
-      "ttl": { "default": 7200, "max": 86400 }
+      "ttl": {
+        "default": 7200,
+        "max": 31536000
+      }
     }
   },
-
-  "requiredGates": ["bounds", "problem", "objective", "tradeoff", "commitment", "decision_owner"],
-
+  "requiredGates": [
+    "bounds",
+    "problem",
+    "objective",
+    "tradeoff",
+    "commitment",
+    "decision_owner"
+  ],
   "gateQuestions": {
-    "problem": { "question": "What problem does this records authority address?", "required": true },
-    "objective": { "question": "What outcome should this records authority enable?", "required": true },
-    "tradeoffs": { "question": "What data risks do you accept with this authority?", "required": true }
+    "problem": {
+      "question": "What problem does this records authority address?",
+      "required": true
+    },
+    "objective": {
+      "question": "What outcome should this records authority enable?",
+      "required": true
+    },
+    "tradeoffs": {
+      "question": "What data risks do you accept with this authority?",
+      "required": true
+    }
   },
-
-  "ttl": { "default": 28800, "max": 86400 },
+  "ttl": {
+    "default": 86400,
+    "max": 31536000
+  },
   "retention_minimum": 7776000
 }

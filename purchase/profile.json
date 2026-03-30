@@ -2,98 +2,180 @@
   "id": "github.com/humanagencyprotocol/hap-profiles/purchase@0.4",
   "name": "Purchase",
   "version": "0.4",
-  "description": "Purchase authority — governs spending company money: subscriptions, supplies, services, advertising",
-
+  "description": "Purchase authority \u2014 governs spending company money: subscriptions, supplies, services, advertising",
   "boundsSchema": {
-    "keyOrder": ["profile", "path", "spend_max", "spend_daily_max", "spend_monthly_max", "transaction_count_daily_max"],
+    "keyOrder": [
+      "profile",
+      "path",
+      "spend_max",
+      "spend_daily_max",
+      "spend_monthly_max",
+      "transaction_count_daily_max"
+    ],
     "fields": {
-      "profile": { "type": "string", "required": true },
-      "path": { "type": "string", "required": true },
+      "profile": {
+        "type": "string",
+        "required": true
+      },
+      "path": {
+        "type": "string",
+        "required": true
+      },
       "spend_max": {
         "type": "number",
         "required": true,
         "displayName": "Max per transaction",
         "description": "Maximum spend per transaction in currency units",
-        "constraint": { "type": "number", "enforceable": ["max"] }
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
       },
       "spend_daily_max": {
         "type": "number",
         "required": true,
         "displayName": "Daily spend limit",
         "description": "Maximum cumulative spend per day in currency units",
-        "constraint": { "type": "number", "enforceable": ["max"] }
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
       },
       "spend_monthly_max": {
         "type": "number",
         "required": true,
         "displayName": "Monthly spend limit",
         "description": "Maximum cumulative spend per month in currency units",
-        "constraint": { "type": "number", "enforceable": ["max"] }
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
       },
       "transaction_count_daily_max": {
         "type": "number",
         "required": true,
         "displayName": "Daily transaction limit",
         "description": "Maximum number of purchase transactions per day",
-        "constraint": { "type": "number", "enforceable": ["max"] }
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
       }
     }
   },
-
   "contextSchema": {
-    "keyOrder": ["currency", "category", "allowed_vendors"],
+    "keyOrder": [
+      "currency",
+      "category",
+      "allowed_vendors"
+    ],
     "fields": {
       "currency": {
         "type": "string",
         "required": true,
         "displayName": "Currency",
         "description": "Permitted currency code",
-        "constraint": { "type": "string", "enforceable": ["enum"] },
-        "enum": ["USD", "EUR", "GBP", "CHF", "JPY", "CAD", "AUD"]
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "enum"
+          ]
+        },
+        "enum": [
+          "USD",
+          "EUR",
+          "GBP",
+          "CHF",
+          "JPY",
+          "CAD",
+          "AUD"
+        ]
       },
       "category": {
         "type": "string",
         "required": true,
         "displayName": "Purchase category",
         "description": "Authorized purchase category",
-        "constraint": { "type": "string", "enforceable": ["enum"] },
-        "enum": ["subscription", "supply", "service", "advertising"]
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "enum"
+          ]
+        },
+        "enum": [
+          "subscription",
+          "supply",
+          "service",
+          "advertising"
+        ]
       },
       "allowed_vendors": {
         "type": "string",
         "required": false,
         "displayName": "Allowed vendors",
         "description": "Comma-separated list of approved vendor names",
-        "constraint": { "type": "string", "enforceable": ["subset"] }
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
       }
     }
   },
-
   "executionContextSchema": {
     "fields": {
       "spend": {
         "source": "declared",
         "description": "Purchase amount in currency units",
         "required": true,
-        "constraint": { "type": "number", "enforceable": ["max"] }
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
       },
       "currency": {
         "source": "declared",
         "description": "Currency code",
         "required": true,
-        "constraint": { "type": "string", "enforceable": ["enum"] }
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "enum"
+          ]
+        }
       },
       "category": {
         "source": "declared",
         "description": "Purchase category",
         "required": true,
-        "constraint": { "type": "string", "enforceable": ["enum"] }
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "enum"
+          ]
+        }
       },
       "allowed_vendors": {
         "source": "declared",
         "description": "Vendor name for this purchase (checked against approved list)",
         "required": false,
-        "constraint": { "type": "string", "enforceable": ["subset"] }
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
       },
       "spend_daily": {
         "source": "cumulative",
@@ -101,7 +183,12 @@
         "window": "daily",
         "description": "Running daily spend total (resolved from execution log)",
         "required": true,
-        "constraint": { "type": "number", "enforceable": ["max"] }
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
       },
       "spend_monthly": {
         "source": "cumulative",
@@ -109,7 +196,12 @@
         "window": "monthly",
         "description": "Running monthly spend total (resolved from execution log)",
         "required": true,
-        "constraint": { "type": "number", "enforceable": ["max"] }
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
       },
       "transaction_count_daily": {
         "source": "cumulative",
@@ -117,30 +209,56 @@
         "window": "daily",
         "description": "Running daily transaction count (resolved from execution log)",
         "required": true,
-        "constraint": { "type": "number", "enforceable": ["max"] }
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
       }
     }
   },
-
   "executionPaths": {
     "purchase-routine": {
       "description": "Day-to-day purchases within authorized bounds",
-      "ttl": { "default": 86400, "max": 86400 }
+      "ttl": {
+        "default": 86400,
+        "max": 2592000
+      }
     },
     "purchase-reviewed": {
       "description": "Large or new-vendor purchases requiring review",
-      "ttl": { "default": 14400, "max": 86400 }
+      "ttl": {
+        "default": 14400,
+        "max": 2592000
+      }
     }
   },
-
-  "requiredGates": ["bounds", "problem", "objective", "tradeoff", "commitment", "decision_owner"],
-
+  "requiredGates": [
+    "bounds",
+    "problem",
+    "objective",
+    "tradeoff",
+    "commitment",
+    "decision_owner"
+  ],
   "gateQuestions": {
-    "problem": { "question": "What problem does this purchase authority address?", "required": true },
-    "objective": { "question": "What outcome should this purchase authority enable?", "required": true },
-    "tradeoffs": { "question": "What financial risks do you accept with this purchase authority?", "required": true }
+    "problem": {
+      "question": "What problem does this purchase authority address?",
+      "required": true
+    },
+    "objective": {
+      "question": "What outcome should this purchase authority enable?",
+      "required": true
+    },
+    "tradeoffs": {
+      "question": "What financial risks do you accept with this purchase authority?",
+      "required": true
+    }
   },
-
-  "ttl": { "default": 86400, "max": 86400 },
+  "ttl": {
+    "default": 86400,
+    "max": 2592000
+  },
   "retention_minimum": 7776000
 }

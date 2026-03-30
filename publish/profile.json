@@ -2,78 +2,139 @@
   "id": "github.com/humanagencyprotocol/hap-profiles/publish@0.4",
   "name": "Content Publishing",
   "version": "0.4",
-  "description": "Publishing authority — governs posting public content to social media, blogs, and other platforms",
-
+  "description": "Publishing authority \u2014 governs posting public content to social media, blogs, and other platforms",
   "boundsSchema": {
-    "keyOrder": ["profile", "path", "post_daily_max", "post_monthly_max"],
+    "keyOrder": [
+      "profile",
+      "path",
+      "post_daily_max",
+      "post_monthly_max"
+    ],
     "fields": {
-      "profile": { "type": "string", "required": true },
-      "path": { "type": "string", "required": true },
+      "profile": {
+        "type": "string",
+        "required": true
+      },
+      "path": {
+        "type": "string",
+        "required": true
+      },
       "post_daily_max": {
         "type": "number",
         "required": true,
         "displayName": "Daily post limit",
         "description": "Maximum posts published per day",
-        "constraint": { "type": "number", "enforceable": ["max"] }
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
       },
       "post_monthly_max": {
         "type": "number",
         "required": true,
         "displayName": "Monthly post limit",
         "description": "Maximum posts published per month",
-        "constraint": { "type": "number", "enforceable": ["max"] }
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
       }
     }
   },
-
   "contextSchema": {
-    "keyOrder": ["allowed_platforms", "content_type", "audience"],
+    "keyOrder": [
+      "allowed_platforms",
+      "content_type",
+      "audience"
+    ],
     "fields": {
       "allowed_platforms": {
         "type": "string",
         "required": true,
         "displayName": "Allowed platforms",
         "description": "Comma-separated list of authorized platforms",
-        "constraint": { "type": "string", "enforceable": ["subset"] }
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
       },
       "content_type": {
         "type": "string",
         "required": true,
         "displayName": "Content type",
         "description": "Authorized content format",
-        "constraint": { "type": "string", "enforceable": ["enum"] },
-        "enum": ["text", "image", "link", "thread"]
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "enum"
+          ]
+        },
+        "enum": [
+          "text",
+          "image",
+          "link",
+          "thread"
+        ]
       },
       "audience": {
         "type": "string",
         "required": true,
         "displayName": "Audience scope",
         "description": "Authorized audience visibility",
-        "constraint": { "type": "string", "enforceable": ["enum"] },
-        "enum": ["public", "followers", "connections"]
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "enum"
+          ]
+        },
+        "enum": [
+          "public",
+          "followers",
+          "connections"
+        ]
       }
     }
   },
-
   "executionContextSchema": {
     "fields": {
       "allowed_platforms": {
         "source": "declared",
         "description": "Platform being published to (checked against authorized platforms)",
         "required": true,
-        "constraint": { "type": "string", "enforceable": ["subset"] }
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
       },
       "content_type": {
         "source": "declared",
         "description": "Content format being published",
         "required": true,
-        "constraint": { "type": "string", "enforceable": ["enum"] }
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "enum"
+          ]
+        }
       },
       "audience": {
         "source": "declared",
         "description": "Audience visibility for this post",
         "required": true,
-        "constraint": { "type": "string", "enforceable": ["enum"] }
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "enum"
+          ]
+        }
       },
       "post_count_daily": {
         "source": "cumulative",
@@ -81,7 +142,12 @@
         "window": "daily",
         "description": "Running daily post count (resolved from execution log)",
         "required": true,
-        "constraint": { "type": "number", "enforceable": ["max"] }
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
       },
       "post_count_monthly": {
         "source": "cumulative",
@@ -89,30 +155,56 @@
         "window": "monthly",
         "description": "Running monthly post count (resolved from execution log)",
         "required": true,
-        "constraint": { "type": "number", "enforceable": ["max"] }
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
       }
     }
   },
-
   "executionPaths": {
     "publish-draft": {
       "description": "Create content drafts for human review before publishing",
-      "ttl": { "default": 86400, "max": 86400 }
+      "ttl": {
+        "default": 86400,
+        "max": 31536000
+      }
     },
     "publish-post": {
       "description": "Publish content directly to authorized platforms",
-      "ttl": { "default": 14400, "max": 86400 }
+      "ttl": {
+        "default": 14400,
+        "max": 2592000
+      }
     }
   },
-
-  "requiredGates": ["bounds", "problem", "objective", "tradeoff", "commitment", "decision_owner"],
-
+  "requiredGates": [
+    "bounds",
+    "problem",
+    "objective",
+    "tradeoff",
+    "commitment",
+    "decision_owner"
+  ],
   "gateQuestions": {
-    "problem": { "question": "What problem does this publishing authority address?", "required": true },
-    "objective": { "question": "What outcome should this publishing authority enable?", "required": true },
-    "tradeoffs": { "question": "What reputational risks do you accept with this publishing authority?", "required": true }
+    "problem": {
+      "question": "What problem does this publishing authority address?",
+      "required": true
+    },
+    "objective": {
+      "question": "What outcome should this publishing authority enable?",
+      "required": true
+    },
+    "tradeoffs": {
+      "question": "What reputational risks do you accept with this publishing authority?",
+      "required": true
+    }
   },
-
-  "ttl": { "default": 86400, "max": 86400 },
+  "ttl": {
+    "default": 86400,
+    "max": 31536000
+  },
   "retention_minimum": 7776000
 }
