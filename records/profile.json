@@ -8,7 +8,6 @@
       "profile",
       "read_access",
       "write_daily_max",
-      "export_access",
       "archive_access"
     ],
     "fields": {
@@ -38,19 +37,6 @@
           "type": "number",
           "enforceable": ["max"]
         }
-      },
-      "export_access": {
-        "type": "string",
-        "required": true,
-        "displayName": "Export access",
-        "description": "Allow the agent to bulk export records",
-        "toolsDescription": "export_records",
-        "constraint": {
-          "type": "string",
-          "enforceable": ["enum"]
-        },
-        "enum": ["allowed", "none"],
-        "default": "none"
       },
       "archive_access": {
         "type": "string",
