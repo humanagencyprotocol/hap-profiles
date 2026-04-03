@@ -6,17 +6,12 @@
   "boundsSchema": {
     "keyOrder": [
       "profile",
-      "path",
       "booking_daily_max",
       "booking_duration_max",
       "lookahead_days_max"
     ],
     "fields": {
       "profile": {
-        "type": "string",
-        "required": true
-      },
-      "path": {
         "type": "string",
         "required": true
       },
@@ -174,29 +169,6 @@
             "max"
           ]
         }
-      }
-    }
-  },
-  "executionPaths": {
-    "schedule-read": {
-      "description": "Read calendar events and check availability",
-      "ttl": {
-        "default": 86400,
-        "max": 31536000
-      }
-    },
-    "schedule-draft": {
-      "description": "Create tentative events for human review",
-      "ttl": {
-        "default": 86400,
-        "max": 31536000
-      }
-    },
-    "schedule-book": {
-      "description": "Directly book, modify, or cancel events",
-      "ttl": {
-        "default": 14400,
-        "max": 2592000
       }
     }
   },

@@ -6,7 +6,6 @@
   "boundsSchema": {
     "keyOrder": [
       "profile",
-      "path",
       "spend_max",
       "spend_daily_max",
       "spend_monthly_max",
@@ -14,10 +13,6 @@
     ],
     "fields": {
       "profile": {
-        "type": "string",
-        "required": true
-      },
-      "path": {
         "type": "string",
         "required": true
       },
@@ -215,22 +210,6 @@
             "max"
           ]
         }
-      }
-    }
-  },
-  "executionPaths": {
-    "purchase-routine": {
-      "description": "Day-to-day purchases within authorized bounds",
-      "ttl": {
-        "default": 86400,
-        "max": 2592000
-      }
-    },
-    "purchase-reviewed": {
-      "description": "Large or new-vendor purchases requiring review",
-      "ttl": {
-        "default": 14400,
-        "max": 2592000
       }
     }
   },

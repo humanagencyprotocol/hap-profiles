@@ -6,16 +6,11 @@
   "boundsSchema": {
     "keyOrder": [
       "profile",
-      "path",
       "write_daily_max",
       "delete_daily_max"
     ],
     "fields": {
       "profile": {
-        "type": "string",
-        "required": true
-      },
-      "path": {
         "type": "string",
         "required": true
       },
@@ -95,29 +90,6 @@
             "max"
           ]
         }
-      }
-    }
-  },
-  "executionPaths": {
-    "customers-read": {
-      "description": "View contacts, activities, deals, pipeline, and tasks",
-      "ttl": {
-        "default": 86400,
-        "max": 31536000
-      }
-    },
-    "customers-write": {
-      "description": "Create and update contacts, log activities, manage deals and tasks",
-      "ttl": {
-        "default": 28800,
-        "max": 31536000
-      }
-    },
-    "customers-delete": {
-      "description": "Delete contacts, deals, and associated records",
-      "ttl": {
-        "default": 7200,
-        "max": 2592000
       }
     }
   },

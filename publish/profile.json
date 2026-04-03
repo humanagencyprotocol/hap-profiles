@@ -6,16 +6,11 @@
   "boundsSchema": {
     "keyOrder": [
       "profile",
-      "path",
       "post_daily_max",
       "post_monthly_max"
     ],
     "fields": {
       "profile": {
-        "type": "string",
-        "required": true
-      },
-      "path": {
         "type": "string",
         "required": true
       },
@@ -161,22 +156,6 @@
             "max"
           ]
         }
-      }
-    }
-  },
-  "executionPaths": {
-    "publish-draft": {
-      "description": "Create content drafts for human review before publishing",
-      "ttl": {
-        "default": 86400,
-        "max": 31536000
-      }
-    },
-    "publish-post": {
-      "description": "Publish content directly to authorized platforms",
-      "ttl": {
-        "default": 14400,
-        "max": 2592000
       }
     }
   },

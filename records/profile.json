@@ -6,15 +6,10 @@
   "boundsSchema": {
     "keyOrder": [
       "profile",
-      "path",
       "write_daily_max"
     ],
     "fields": {
       "profile": {
-        "type": "string",
-        "required": true
-      },
-      "path": {
         "type": "string",
         "required": true
       },
@@ -49,22 +44,6 @@
             "max"
           ]
         }
-      }
-    }
-  },
-  "executionPaths": {
-    "records-read": {
-      "description": "Search and read personal records",
-      "ttl": {
-        "default": 28800,
-        "max": 31536000
-      }
-    },
-    "records-write": {
-      "description": "Create, update, and archive personal records",
-      "ttl": {
-        "default": 7200,
-        "max": 31536000
       }
     }
   },

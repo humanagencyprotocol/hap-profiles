@@ -6,7 +6,6 @@
   "boundsSchema": {
     "keyOrder": [
       "profile",
-      "path",
       "amount_max",
       "amount_daily_max",
       "amount_monthly_max",
@@ -14,10 +13,6 @@
     ],
     "fields": {
       "profile": {
-        "type": "string",
-        "required": true
-      },
-      "path": {
         "type": "string",
         "required": true
       },
@@ -190,22 +185,6 @@
             "max"
           ]
         }
-      }
-    }
-  },
-  "executionPaths": {
-    "charge-routine": {
-      "description": "Day-to-day financial transactions within authorized bounds",
-      "ttl": {
-        "default": 86400,
-        "max": 2592000
-      }
-    },
-    "charge-reviewed": {
-      "description": "Large or unusual transactions requiring dual authorization",
-      "ttl": {
-        "default": 14400,
-        "max": 2592000
       }
     }
   },

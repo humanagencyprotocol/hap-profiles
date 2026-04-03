@@ -6,7 +6,6 @@
   "boundsSchema": {
     "keyOrder": [
       "profile",
-      "path",
       "recipient_max",
       "send_daily_max",
       "read_max_age_days",
@@ -14,10 +13,6 @@
     ],
     "fields": {
       "profile": {
-        "type": "string",
-        "required": true
-      },
-      "path": {
         "type": "string",
         "required": true
       },
@@ -166,29 +161,6 @@
             "max"
           ]
         }
-      }
-    }
-  },
-  "executionPaths": {
-    "email-draft": {
-      "description": "Create email drafts for human review before sending",
-      "ttl": {
-        "default": 86400,
-        "max": 31536000
-      }
-    },
-    "email-send": {
-      "description": "Send emails directly within authorized bounds",
-      "ttl": {
-        "default": 14400,
-        "max": 2592000
-      }
-    },
-    "email-read": {
-      "description": "Read and search inbox within time and volume bounds",
-      "ttl": {
-        "default": 86400,
-        "max": 31536000
       }
     }
   },
