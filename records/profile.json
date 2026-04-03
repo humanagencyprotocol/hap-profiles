@@ -2,31 +2,68 @@
   "id": "github.com/humanagencyprotocol/hap-profiles/records@0.4",
   "name": "Records",
   "version": "0.4",
-  "description": "Records authority \u2014 governs accessing and modifying personal structured data",
+  "description": "Records authority — governs accessing and managing personal structured data. Records are immutable once created.",
   "boundsSchema": {
     "keyOrder": [
       "profile",
-      "write_daily_max"
+      "read_access",
+      "write_daily_max",
+      "export_access",
+      "archive_access"
     ],
     "fields": {
       "profile": {
         "type": "string",
         "required": true
       },
+      "read_access": {
+        "type": "string",
+        "required": true,
+        "displayName": "Read access",
+        "description": "Allow the agent to list, view, and search your records",
+        "toolsDescription": "list_records, get_record, search_records",
+        "constraint": {
+          "type": "string",
+          "enforceable": ["enum"]
+        },
+        "enum": ["unlimited", "none"],
+        "default": "unlimited"
+      },
       "write_daily_max": {
         "type": "number",
         "required": true,
-        "displayName": "Daily write limit",
-        "description": "Maximum write operations per day",
-        "paths": [
-          "records-write"
-        ],
+        "displayName": "Daily create limit",
+        "description": "Maximum new records the agent can create per day",
         "constraint": {
           "type": "number",
-          "enforceable": [
-            "max"
-          ]
+          "enforceable": ["max"]
         }
+      },
+      "export_access": {
+        "type": "string",
+        "required": true,
+        "displayName": "Export access",
+        "description": "Allow the agent to bulk export records",
+        "toolsDescription": "export_records",
+        "constraint": {
+          "type": "string",
+          "enforceable": ["enum"]
+        },
+        "enum": ["allowed", "none"],
+        "default": "none"
+      },
+      "archive_access": {
+        "type": "string",
+        "required": true,
+        "displayName": "Archive access",
+        "description": "Allow the agent to archive records (non-destructive, records remain accessible)",
+        "toolsDescription": "archive_record",
+        "constraint": {
+          "type": "string",
+          "enforceable": ["enum"]
+        },
+        "enum": ["allowed", "none"],
+        "default": "none"
       }
     }
   },
@@ -36,13 +73,11 @@
         "source": "cumulative",
         "cumulativeField": "_count",
         "window": "daily",
-        "description": "Running daily write operation count",
+        "description": "Running daily create operation count",
         "required": true,
         "constraint": {
           "type": "number",
-          "enforceable": [
-            "max"
-          ]
+          "enforceable": ["max"]
         }
       }
     }
