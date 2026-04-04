@@ -2,7 +2,7 @@
   "id": "github.com/humanagencyprotocol/hap-profiles/email@0.4",
   "name": "Email",
   "version": "0.4",
-  "description": "Email authority \u2014 governs sending, drafting, and reading email via Gmail",
+  "description": "Email authority — governs sending, drafting, and reading email via Gmail",
   "boundsSchema": {
     "keyOrder": [
       "profile",
@@ -166,26 +166,10 @@
   },
   "requiredGates": [
     "bounds",
-    "problem",
-    "objective",
-    "tradeoff",
+    "intent",
     "commitment",
     "decision_owner"
   ],
-  "gateQuestions": {
-    "problem": {
-      "question": "What problem does this email authority address?",
-      "required": true
-    },
-    "objective": {
-      "question": "What outcome should this email authority enable?",
-      "required": true
-    },
-    "tradeoffs": {
-      "question": "What risks do you accept with this email authority?",
-      "required": true
-    }
-  },
   "ttl": {
     "default": 86400,
     "max": 31536000

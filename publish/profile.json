@@ -2,7 +2,7 @@
   "id": "github.com/humanagencyprotocol/hap-profiles/publish@0.4",
   "name": "Content Publishing",
   "version": "0.4",
-  "description": "Publishing authority \u2014 governs posting public content to social media, blogs, and other platforms",
+  "description": "Publishing authority — governs posting public content to social media, blogs, and other platforms",
   "boundsSchema": {
     "keyOrder": [
       "profile",
@@ -161,26 +161,10 @@
   },
   "requiredGates": [
     "bounds",
-    "problem",
-    "objective",
-    "tradeoff",
+    "intent",
     "commitment",
     "decision_owner"
   ],
-  "gateQuestions": {
-    "problem": {
-      "question": "What problem does this publishing authority address?",
-      "required": true
-    },
-    "objective": {
-      "question": "What outcome should this publishing authority enable?",
-      "required": true
-    },
-    "tradeoffs": {
-      "question": "What reputational risks do you accept with this publishing authority?",
-      "required": true
-    }
-  },
   "ttl": {
     "default": 86400,
     "max": 31536000

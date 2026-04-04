@@ -2,7 +2,7 @@
   "id": "github.com/humanagencyprotocol/hap-profiles/schedule@0.4",
   "name": "Scheduling",
   "version": "0.4",
-  "description": "Scheduling authority \u2014 governs calendar access: reading, drafting, and booking events",
+  "description": "Scheduling authority — governs calendar access: reading, drafting, and booking events",
   "boundsSchema": {
     "keyOrder": [
       "profile",
@@ -174,26 +174,10 @@
   },
   "requiredGates": [
     "bounds",
-    "problem",
-    "objective",
-    "tradeoff",
+    "intent",
     "commitment",
     "decision_owner"
   ],
-  "gateQuestions": {
-    "problem": {
-      "question": "What problem does this scheduling authority address?",
-      "required": true
-    },
-    "objective": {
-      "question": "What outcome should this scheduling authority enable?",
-      "required": true
-    },
-    "tradeoffs": {
-      "question": "What risks do you accept with this scheduling authority?",
-      "required": true
-    }
-  },
   "ttl": {
     "default": 86400,
     "max": 31536000

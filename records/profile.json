@@ -24,9 +24,14 @@
         "toolsDescription": "list_records, get_record, search_records",
         "constraint": {
           "type": "string",
-          "enforceable": ["enum"]
+          "enforceable": [
+            "enum"
+          ]
         },
-        "enum": ["unlimited", "none"],
+        "enum": [
+          "unlimited",
+          "none"
+        ],
         "default": "unlimited"
       },
       "write_daily_max": {
@@ -36,7 +41,9 @@
         "description": "Maximum new records the agent can create per day",
         "constraint": {
           "type": "number",
-          "enforceable": ["max"]
+          "enforceable": [
+            "max"
+          ]
         }
       },
       "delete_access": {
@@ -47,9 +54,14 @@
         "toolsDescription": "delete_record",
         "constraint": {
           "type": "string",
-          "enforceable": ["enum"]
+          "enforceable": [
+            "enum"
+          ]
         },
-        "enum": ["allowed", "none"],
+        "enum": [
+          "allowed",
+          "none"
+        ],
         "default": "none"
       },
       "archive_access": {
@@ -60,9 +72,14 @@
         "toolsDescription": "archive_record",
         "constraint": {
           "type": "string",
-          "enforceable": ["enum"]
+          "enforceable": [
+            "enum"
+          ]
         },
-        "enum": ["allowed", "none"],
+        "enum": [
+          "allowed",
+          "none"
+        ],
         "default": "none"
       }
     }
@@ -77,33 +94,19 @@
         "required": true,
         "constraint": {
           "type": "number",
-          "enforceable": ["max"]
+          "enforceable": [
+            "max"
+          ]
         }
       }
     }
   },
   "requiredGates": [
     "bounds",
-    "problem",
-    "objective",
-    "tradeoff",
+    "intent",
     "commitment",
     "decision_owner"
   ],
-  "gateQuestions": {
-    "problem": {
-      "question": "What problem does this records authority address?",
-      "required": true
-    },
-    "objective": {
-      "question": "What outcome should this records authority enable?",
-      "required": true
-    },
-    "tradeoffs": {
-      "question": "What data risks do you accept with this authority?",
-      "required": true
-    }
-  },
   "ttl": {
     "default": 86400,
     "max": 31536000

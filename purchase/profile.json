@@ -2,7 +2,7 @@
   "id": "github.com/humanagencyprotocol/hap-profiles/purchase@0.4",
   "name": "Purchase",
   "version": "0.4",
-  "description": "Purchase authority \u2014 governs spending company money: subscriptions, supplies, services, advertising",
+  "description": "Purchase authority — governs spending company money: subscriptions, supplies, services, advertising",
   "boundsSchema": {
     "keyOrder": [
       "profile",
@@ -215,26 +215,10 @@
   },
   "requiredGates": [
     "bounds",
-    "problem",
-    "objective",
-    "tradeoff",
+    "intent",
     "commitment",
     "decision_owner"
   ],
-  "gateQuestions": {
-    "problem": {
-      "question": "What problem does this purchase authority address?",
-      "required": true
-    },
-    "objective": {
-      "question": "What outcome should this purchase authority enable?",
-      "required": true
-    },
-    "tradeoffs": {
-      "question": "What financial risks do you accept with this purchase authority?",
-      "required": true
-    }
-  },
   "ttl": {
     "default": 86400,
     "max": 2592000
