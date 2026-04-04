@@ -2,12 +2,13 @@
   "id": "github.com/humanagencyprotocol/hap-profiles/records@0.4",
   "name": "Records",
   "version": "0.4",
-  "description": "Records authority — governs accessing and managing personal structured data. Records are immutable once created.",
+  "description": "Records authority — governs accessing and managing personal structured data",
   "boundsSchema": {
     "keyOrder": [
       "profile",
       "read_access",
       "write_daily_max",
+      "delete_access",
       "archive_access"
     ],
     "fields": {
@@ -37,6 +38,19 @@
           "type": "number",
           "enforceable": ["max"]
         }
+      },
+      "delete_access": {
+        "type": "string",
+        "required": true,
+        "displayName": "Delete access",
+        "description": "Allow the agent to permanently delete records",
+        "toolsDescription": "delete_record",
+        "constraint": {
+          "type": "string",
+          "enforceable": ["enum"]
+        },
+        "enum": ["allowed", "none"],
+        "default": "none"
       },
       "archive_access": {
         "type": "string",
