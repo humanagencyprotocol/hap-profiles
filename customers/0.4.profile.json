@@ -55,7 +55,8 @@
         "type": "string",
         "required": true,
         "displayName": "Contact types",
-        "description": "Permitted contact types (comma-separated: customer, lead, partner, vendor)",
+        "description": "Permitted contact types",
+        "enum": ["customer", "lead", "partner", "vendor"],
         "constraint": {
           "type": "string",
           "enforceable": [
