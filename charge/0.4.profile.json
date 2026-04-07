@@ -190,26 +190,10 @@
   },
   "requiredGates": [
     "bounds",
-    "problem",
-    "objective",
-    "tradeoff",
+    "intent",
     "commitment",
     "decision_owner"
   ],
-  "gateQuestions": {
-    "problem": {
-      "question": "What problem does this charge authority address?",
-      "required": true
-    },
-    "objective": {
-      "question": "What outcome should this charge authority enable?",
-      "required": true
-    },
-    "tradeoffs": {
-      "question": "What financial risks do you accept with this authority?",
-      "required": true
-    }
-  },
   "ttl": {
     "default": 86400,
     "max": 2592000
