@@ -50,8 +50,9 @@
       "allowed_platforms": {
         "type": "string",
         "required": true,
-        "displayName": "Allowed platforms",
-        "description": "Comma-separated list of authorized platforms",
+        "displayName": "Platforms",
+        "description": "Authorized publishing platforms",
+        "enum": ["linkedin"],
         "constraint": {
           "type": "string",
           "enforceable": [
@@ -62,37 +63,28 @@
       "content_type": {
         "type": "string",
         "required": true,
-        "displayName": "Content type",
-        "description": "Authorized content format",
+        "displayName": "Content types",
+        "description": "Authorized content formats",
+        "enum": ["text", "image", "link", "article"],
         "constraint": {
           "type": "string",
           "enforceable": [
-            "enum"
+            "subset"
           ]
-        },
-        "enum": [
-          "text",
-          "image",
-          "link",
-          "thread"
-        ]
+        }
       },
       "audience": {
         "type": "string",
         "required": true,
-        "displayName": "Audience scope",
+        "displayName": "Audience",
         "description": "Authorized audience visibility",
+        "enum": ["public", "followers", "connections"],
         "constraint": {
           "type": "string",
           "enforceable": [
-            "enum"
+            "subset"
           ]
-        },
-        "enum": [
-          "public",
-          "followers",
-          "connections"
-        ]
+        }
       }
     }
   },
@@ -116,7 +108,7 @@
         "constraint": {
           "type": "string",
           "enforceable": [
-            "enum"
+            "subset"
           ]
         }
       },
@@ -127,7 +119,7 @@
         "constraint": {
           "type": "string",
           "enforceable": [
-            "enum"
+            "subset"
           ]
         }
       },
