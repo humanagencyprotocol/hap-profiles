@@ -2,7 +2,7 @@
   "id": "github.com/humanagencyprotocol/hap-profiles/email@0.4",
   "name": "Email",
   "version": "0.4",
-  "description": "Email authority — governs sending, drafting, and reading email via Gmail",
+  "description": "Email authority \u2014 governs sending, drafting, and reading email via Gmail",
   "boundsSchema": {
     "keyOrder": [
       "profile",
@@ -21,62 +21,54 @@
         "required": false,
         "displayName": "Recipients per email",
         "description": "Maximum recipients per email",
+        "boundType": {
+          "kind": "per_transaction",
+          "of": "recipient_count"
+        },
         "paths": [
           "email-send",
           "email-draft"
-        ],
-        "constraint": {
-          "type": "number",
-          "enforceable": [
-            "max"
-          ]
-        }
+        ]
       },
       "send_daily_max": {
         "type": "number",
         "required": false,
         "displayName": "Daily send limit",
         "description": "Maximum emails sent or drafted per day",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
         "paths": [
           "email-send",
           "email-draft"
-        ],
-        "constraint": {
-          "type": "number",
-          "enforceable": [
-            "max"
-          ]
-        }
+        ]
       },
       "read_max_age_days": {
         "type": "number",
         "required": false,
         "displayName": "Max email age (days)",
         "description": "Maximum age in days for email search",
+        "boundType": {
+          "kind": "per_transaction",
+          "of": "read_age_days"
+        },
         "paths": [
           "email-read"
-        ],
-        "constraint": {
-          "type": "number",
-          "enforceable": [
-            "max"
-          ]
-        }
+        ]
       },
       "read_daily_max": {
         "type": "number",
         "required": false,
         "displayName": "Daily read limit",
         "description": "Maximum emails read per day",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
         "paths": [
           "email-read"
-        ],
-        "constraint": {
-          "type": "number",
-          "enforceable": [
-            "max"
-          ]
-        }
+        ]
       }
     }
   },

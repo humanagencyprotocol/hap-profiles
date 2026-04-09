@@ -2,7 +2,7 @@
   "id": "github.com/humanagencyprotocol/hap-profiles/customers@0.4",
   "name": "Customer Management",
   "version": "0.4",
-  "description": "Customer authority — governs CRM operations: contacts, activities, deals, tasks",
+  "description": "Customer authority \u2014 governs CRM operations: contacts, activities, deals, tasks",
   "boundsSchema": {
     "keyOrder": [
       "profile",
@@ -19,30 +19,26 @@
         "required": true,
         "displayName": "Daily write limit",
         "description": "Maximum CRM write operations per day (creates, updates)",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
         "paths": [
           "customers-write"
-        ],
-        "constraint": {
-          "type": "number",
-          "enforceable": [
-            "max"
-          ]
-        }
+        ]
       },
       "delete_daily_max": {
         "type": "number",
         "required": true,
         "displayName": "Daily delete limit",
         "description": "Maximum CRM delete operations per day",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
         "paths": [
           "customers-delete"
-        ],
-        "constraint": {
-          "type": "number",
-          "enforceable": [
-            "max"
-          ]
-        }
+        ]
       }
     }
   },
@@ -56,7 +52,12 @@
         "required": true,
         "displayName": "Contact types",
         "description": "Permitted contact types",
-        "enum": ["customer", "lead", "partner", "vendor"],
+        "enum": [
+          "customer",
+          "lead",
+          "partner",
+          "vendor"
+        ],
         "constraint": {
           "type": "string",
           "enforceable": [

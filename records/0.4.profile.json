@@ -2,7 +2,7 @@
   "id": "github.com/humanagencyprotocol/hap-profiles/records@0.4",
   "name": "Records",
   "version": "0.4",
-  "description": "Records authority — governs accessing and managing personal structured data",
+  "description": "Records authority \u2014 governs accessing and managing personal structured data",
   "boundsSchema": {
     "keyOrder": [
       "profile",
@@ -21,17 +21,14 @@
         "required": true,
         "displayName": "Read access",
         "description": "Allow the agent to list, view, and search your records",
-        "toolsDescription": "list_records, get_record, search_records",
-        "constraint": {
-          "type": "string",
-          "enforceable": [
-            "enum"
+        "boundType": {
+          "kind": "enum",
+          "values": [
+            "unlimited",
+            "none"
           ]
         },
-        "enum": [
-          "unlimited",
-          "none"
-        ],
+        "toolsDescription": "list_records, get_record, search_records",
         "default": "unlimited"
       },
       "write_daily_max": {
@@ -39,11 +36,9 @@
         "required": true,
         "displayName": "Daily create limit",
         "description": "Maximum new records the agent can create per day",
-        "constraint": {
-          "type": "number",
-          "enforceable": [
-            "max"
-          ]
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
         }
       },
       "delete_access": {
@@ -51,17 +46,14 @@
         "required": true,
         "displayName": "Delete access",
         "description": "Allow the agent to permanently delete records",
-        "toolsDescription": "delete_record",
-        "constraint": {
-          "type": "string",
-          "enforceable": [
-            "enum"
+        "boundType": {
+          "kind": "enum",
+          "values": [
+            "allowed",
+            "none"
           ]
         },
-        "enum": [
-          "allowed",
-          "none"
-        ],
+        "toolsDescription": "delete_record",
         "default": "none"
       },
       "archive_access": {
@@ -69,17 +61,14 @@
         "required": true,
         "displayName": "Archive access",
         "description": "Allow the agent to archive records (non-destructive, records remain accessible)",
-        "toolsDescription": "archive_record",
-        "constraint": {
-          "type": "string",
-          "enforceable": [
-            "enum"
+        "boundType": {
+          "kind": "enum",
+          "values": [
+            "allowed",
+            "none"
           ]
         },
-        "enum": [
-          "allowed",
-          "none"
-        ],
+        "toolsDescription": "archive_record",
         "default": "none"
       }
     }

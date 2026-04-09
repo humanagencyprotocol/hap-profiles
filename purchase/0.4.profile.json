@@ -2,7 +2,7 @@
   "id": "github.com/humanagencyprotocol/hap-profiles/purchase@0.4",
   "name": "Purchase",
   "version": "0.4",
-  "description": "Purchase authority — governs spending company money: subscriptions, supplies, services, advertising",
+  "description": "Purchase authority \u2014 governs spending company money: subscriptions, supplies, services, advertising",
   "boundsSchema": {
     "keyOrder": [
       "profile",
@@ -21,11 +21,9 @@
         "required": true,
         "displayName": "Max per transaction",
         "description": "Maximum spend per transaction in currency units",
-        "constraint": {
-          "type": "number",
-          "enforceable": [
-            "max"
-          ]
+        "boundType": {
+          "kind": "per_transaction",
+          "of": "spend"
         }
       },
       "spend_daily_max": {
@@ -33,11 +31,10 @@
         "required": true,
         "displayName": "Daily spend limit",
         "description": "Maximum cumulative spend per day in currency units",
-        "constraint": {
-          "type": "number",
-          "enforceable": [
-            "max"
-          ]
+        "boundType": {
+          "kind": "cumulative_sum",
+          "of": "spend",
+          "window": "daily"
         }
       },
       "spend_monthly_max": {
@@ -45,11 +42,10 @@
         "required": true,
         "displayName": "Monthly spend limit",
         "description": "Maximum cumulative spend per month in currency units",
-        "constraint": {
-          "type": "number",
-          "enforceable": [
-            "max"
-          ]
+        "boundType": {
+          "kind": "cumulative_sum",
+          "of": "spend",
+          "window": "monthly"
         }
       },
       "transaction_count_daily_max": {
@@ -57,11 +53,9 @@
         "required": true,
         "displayName": "Daily transaction limit",
         "description": "Maximum number of purchase transactions per day",
-        "constraint": {
-          "type": "number",
-          "enforceable": [
-            "max"
-          ]
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
         }
       }
     }
