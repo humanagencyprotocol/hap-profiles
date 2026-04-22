@@ -1,8 +1,8 @@
 {
-  "id": "github.com/humanagencyprotocol/hap-profiles/schedule@0.4",
-  "name": "Scheduling",
+  "id": "github.com/humanagencyprotocol/hap-profiles/calendar@0.4",
+  "name": "Calendar",
   "version": "0.4",
-  "description": "Scheduling authority \u2014 governs calendar access: reading, drafting, and booking events",
+  "description": "Calendar authority \u2014 governs calendar access: reading, drafting, and booking events",
   "boundsSchema": {
     "keyOrder": [
       "profile",

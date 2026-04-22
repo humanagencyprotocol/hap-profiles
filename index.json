@@ -5,7 +5,7 @@
     "github.com/humanagencyprotocol/hap-profiles/purchase@0.4": "purchase/0.4.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/email@0.4": "email/0.4.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/customers@0.4": "customers/0.4.profile.json",
-    "github.com/humanagencyprotocol/hap-profiles/schedule@0.4": "schedule/0.4.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/calendar@0.4": "calendar/0.4.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/publish@0.4": "publish/0.4.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/records@0.4": "records/0.4.profile.json"
   }
