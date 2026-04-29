@@ -20,6 +20,7 @@
         "required": true,
         "displayName": "Daily booking limit",
         "description": "Maximum new events booked per day",
+        "unit": "count",
         "boundType": {
           "kind": "cumulative_count",
           "window": "daily"
@@ -28,8 +29,9 @@
       "booking_duration_max": {
         "type": "number",
         "required": true,
-        "displayName": "Max event duration (minutes)",
-        "description": "Maximum duration of a single event in minutes",
+        "displayName": "Max event duration",
+        "description": "Maximum duration of a single event",
+        "unit": "minutes",
         "boundType": {
           "kind": "per_transaction",
           "of": "duration"
@@ -38,8 +40,9 @@
       "lookahead_days_max": {
         "type": "number",
         "required": true,
-        "displayName": "Max lookahead (days)",
+        "displayName": "Max lookahead",
         "description": "Maximum number of days into the future an event can be booked",
+        "unit": "days",
         "boundType": {
           "kind": "per_transaction",
           "of": "lookahead"

@@ -19,6 +19,7 @@
         "required": true,
         "displayName": "Daily write limit",
         "description": "Maximum CRM write operations per day (creates, updates)",
+        "unit": "count",
         "boundType": {
           "kind": "cumulative_count",
           "window": "daily"
@@ -32,6 +33,7 @@
         "required": true,
         "displayName": "Daily delete limit",
         "description": "Maximum CRM delete operations per day",
+        "unit": "count",
         "boundType": {
           "kind": "cumulative_count",
           "window": "daily"

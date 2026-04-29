@@ -21,6 +21,7 @@
         "required": false,
         "displayName": "Recipients per email",
         "description": "Maximum recipients per email",
+        "unit": "count",
         "boundType": {
           "kind": "per_transaction",
           "of": "recipient_count"
@@ -35,6 +36,7 @@
         "required": false,
         "displayName": "Daily send limit",
         "description": "Maximum emails sent or drafted per day",
+        "unit": "count",
         "boundType": {
           "kind": "cumulative_count",
           "window": "daily"
@@ -49,6 +51,7 @@
         "required": false,
         "displayName": "Max email age (days)",
         "description": "Maximum age in days for email search",
+        "unit": "days",
         "boundType": {
           "kind": "per_transaction",
           "of": "read_age_days"
@@ -62,6 +65,7 @@
         "required": false,
         "displayName": "Daily read limit",
         "description": "Maximum emails read per day",
+        "unit": "count",
         "boundType": {
           "kind": "cumulative_count",
           "window": "daily"

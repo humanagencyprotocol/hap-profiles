@@ -21,6 +21,7 @@
         "required": true,
         "displayName": "Max per transaction",
         "description": "Maximum spend per transaction in currency units",
+        "unit": "currency:EUR",
         "boundType": {
           "kind": "per_transaction",
           "of": "spend"
@@ -31,6 +32,7 @@
         "required": true,
         "displayName": "Daily spend limit",
         "description": "Maximum cumulative spend per day in currency units",
+        "unit": "currency:EUR",
         "boundType": {
           "kind": "cumulative_sum",
           "of": "spend",
@@ -42,6 +44,7 @@
         "required": true,
         "displayName": "Monthly spend limit",
         "description": "Maximum cumulative spend per month in currency units",
+        "unit": "currency:EUR",
         "boundType": {
           "kind": "cumulative_sum",
           "of": "spend",
@@ -53,6 +56,7 @@
         "required": true,
         "displayName": "Daily transaction limit",
         "description": "Maximum number of purchase transactions per day",
+        "unit": "count",
         "boundType": {
           "kind": "cumulative_count",
           "window": "daily"

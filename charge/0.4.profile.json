@@ -21,6 +21,7 @@
         "required": true,
         "displayName": "Max per transaction",
         "description": "Maximum monetary amount per transaction in currency units",
+        "unit": "currency:EUR",
         "boundType": {
           "kind": "per_transaction",
           "of": "amount"
@@ -31,6 +32,7 @@
         "required": true,
         "displayName": "Daily charge limit",
         "description": "Maximum cumulative charges per day in currency units",
+        "unit": "currency:EUR",
         "boundType": {
           "kind": "cumulative_sum",
           "of": "amount",
@@ -42,6 +44,7 @@
         "required": true,
         "displayName": "Monthly charge limit",
         "description": "Maximum cumulative charges per month in currency units",
+        "unit": "currency:EUR",
         "boundType": {
           "kind": "cumulative_sum",
           "of": "amount",
@@ -53,6 +56,7 @@
         "required": true,
         "displayName": "Daily transaction limit",
         "description": "Maximum number of transactions per day",
+        "unit": "count",
         "boundType": {
           "kind": "cumulative_count",
           "window": "daily"

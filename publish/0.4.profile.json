@@ -19,6 +19,7 @@
         "required": true,
         "displayName": "Daily post limit",
         "description": "Maximum posts published per day",
+        "unit": "count",
         "boundType": {
           "kind": "cumulative_count",
           "window": "daily"
@@ -29,6 +30,7 @@
         "required": true,
         "displayName": "Monthly post limit",
         "description": "Maximum posts published per month",
+        "unit": "count",
         "boundType": {
           "kind": "cumulative_count",
           "window": "monthly"
