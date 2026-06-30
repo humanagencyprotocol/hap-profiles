@@ -68,7 +68,6 @@
         "enum": [
           "text",
           "image",
-          "link",
           "article"
         ],
         "constraint": {
@@ -85,7 +84,6 @@
         "description": "Authorized audience visibility",
         "enum": [
           "public",
-          "followers",
           "connections"
         ],
         "constraint": {
