@@ -1,0 +1,128 @@
+{
+  "id": "github.com/humanagencyprotocol/hap-profiles/customers@0.5",
+  "name": "Customer Management",
+  "version": "0.5",
+  "description": "Customer authority — governs CRM operations: contacts, activities, deals, tasks",
+  "boundsSchema": {
+    "keyOrder": [
+      "profile",
+      "read_access",
+      "write_daily_max",
+      "delete_daily_max"
+    ],
+    "fields": {
+      "profile": {
+        "type": "string",
+        "required": true
+      },
+      "read_access": {
+        "type": "string",
+        "required": true,
+        "displayName": "Read access",
+        "description": "Allow the agent to browse contacts, timelines, pipeline, tasks, and export CRM data",
+        "boundType": {
+          "kind": "enum",
+          "values": [
+            "unlimited",
+            "none"
+          ]
+        },
+        "toolsDescription": "find_contacts, get_timeline, get_pipeline, list_tasks, export_crm",
+        "default": "unlimited"
+      },
+      "write_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Daily write limit",
+        "description": "Maximum CRM write operations per day (creates, updates)",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "paths": [
+          "customers-write"
+        ]
+      },
+      "delete_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Daily delete limit",
+        "description": "Maximum CRM delete operations per day",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "paths": [
+          "customers-delete"
+        ]
+      }
+    }
+  },
+  "contextSchema": {
+    "keyOrder": [
+      "contact_type"
+    ],
+    "fields": {
+      "contact_type": {
+        "type": "string",
+        "required": true,
+        "displayName": "Contact types",
+        "description": "Permitted contact types",
+        "enum": [
+          "customer",
+          "lead",
+          "partner",
+          "vendor"
+        ],
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      }
+    }
+  },
+  "executionContextSchema": {
+    "fields": {
+      "contact_type": {
+        "source": "declared",
+        "description": "Contact type being accessed",
+        "required": true,
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      },
+      "write_count_daily": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "daily",
+        "description": "Running daily write operation count",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
+      }
+    }
+  },
+  "requiredGates": [
+    "bounds",
+    "intent",
+    "commitment",
+    "decision_owner"
+  ],
+  "ttl": {
+    "default": 86400,
+    "max": 31536000
+  },
+  "retention_minimum": 7776000,
+  "content_binding": { "version": "1", "kind": "jcs" }
+}
