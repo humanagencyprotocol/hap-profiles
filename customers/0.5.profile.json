@@ -68,8 +68,8 @@
       "contact_type": {
         "type": "string",
         "required": true,
-        "displayName": "Contact types",
-        "description": "Permitted contact types",
+        "displayName": "Contact types the agent may create or modify",
+        "description": "Contact types the agent may create, update or delete. Does NOT restrict reading — reads are governed by read_access.",
         "enum": [
           "customer",
           "lead",
@@ -124,5 +124,8 @@
     "max": 31536000
   },
   "retention_minimum": 7776000,
-  "content_binding": { "version": "1", "kind": "jcs" }
+  "content_binding": {
+    "version": "1",
+    "kind": "jcs"
+  }
 }
