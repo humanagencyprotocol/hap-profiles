@@ -2,7 +2,7 @@
   "id": "github.com/humanagencyprotocol/hap-profiles/email@0.4",
   "name": "Email",
   "version": "0.4",
-  "description": "Email authority \u2014 governs sending, drafting, and reading email via Gmail",
+  "description": "Email authority — governs sending, drafting, and reading email via Gmail",
   "boundsSchema": {
     "keyOrder": [
       "profile",
@@ -64,7 +64,7 @@
         "type": "number",
         "required": false,
         "displayName": "Daily read limit",
-        "description": "Maximum emails read per day",
+        "description": "Not currently enforced: reads carry no receipt, so no component counts them. Hidden from the authorization editor until enforcement exists.",
         "unit": "count",
         "boundType": {
           "kind": "cumulative_count",
@@ -72,7 +72,8 @@
         },
         "paths": [
           "email-read"
-        ]
+        ],
+        "enforced": false
       }
     }
   },
@@ -171,5 +172,8 @@
     "max": 31536000
   },
   "retention_minimum": 7776000,
-  "content_binding": { "version": "1", "kind": "text" }
+  "content_binding": {
+    "version": "1",
+    "kind": "text"
+  }
 }

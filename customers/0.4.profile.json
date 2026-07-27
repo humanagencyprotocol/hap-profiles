@@ -2,7 +2,7 @@
   "id": "github.com/humanagencyprotocol/hap-profiles/customers@0.4",
   "name": "Customer Management",
   "version": "0.4",
-  "description": "Customer authority \u2014 governs CRM operations: contacts, activities, deals, tasks",
+  "description": "Customer authority — governs CRM operations: contacts, activities, deals, tasks",
   "boundsSchema": {
     "keyOrder": [
       "profile",
@@ -52,8 +52,8 @@
       "contact_type": {
         "type": "string",
         "required": true,
-        "displayName": "Contact types",
-        "description": "Permitted contact types",
+        "displayName": "Contact types the agent may create or modify",
+        "description": "Contact types the agent may create, update or delete. Does NOT restrict reading — reads are governed by read_access.",
         "enum": [
           "customer",
           "lead",
@@ -108,5 +108,8 @@
     "max": 31536000
   },
   "retention_minimum": 7776000,
-  "content_binding": { "version": "1", "kind": "jcs" }
+  "content_binding": {
+    "version": "1",
+    "kind": "jcs"
+  }
 }
