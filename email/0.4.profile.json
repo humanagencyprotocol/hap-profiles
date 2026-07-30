@@ -50,8 +50,9 @@
         "type": "number",
         "required": false,
         "displayName": "Max email age (days)",
-        "description": "Maximum age in days for email search",
+        "description": "Maximum age in days for email search. Enforced locally by the Gatekeeper, never by the Authority Server: reads carry no receipt, so no signed check ever reads this value. Set it on the integration instead, where it is live-editable. Kept in the schema as the fallback for grants issued before that setting existed.",
         "unit": "days",
+        "enforcedBy": "gatekeeper",
         "boundType": {
           "kind": "per_transaction",
           "of": "read_age_days"
