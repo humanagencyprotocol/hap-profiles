@@ -1,0 +1,161 @@
+{
+  "id": "deploy",
+  "name": "Deploy",
+  "version": "0.6",
+  "description": "Authority to put software live. Successor to deploy-gate@0.2, HAP's first profile — renamed because the old id is bound to a structure (flat frame, disclosure_hash) that no longer exists. Deliberately host-agnostic: every deployment system has something to deploy, somewhere to put it, a rate worth capping and a notion of undo. Provider vocabulary (GitHub 'environment', Vercel 'target', Netlify 'context') lives in the connector manifest, never here.",
+  "boundsSchema": {
+    "keyOrder": [
+      "profile",
+      "deploy_daily_max",
+      "rollback_allowed"
+    ],
+    "fields": {
+      "profile": {
+        "type": "string",
+        "required": true
+      },
+      "deploy_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Daily deploy limit",
+        "description": "Maximum deployments per day. Counted by the Authority Server, so a compromised gateway cannot exceed it.",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        }
+      },
+      "rollback_allowed": {
+        "type": "string",
+        "required": true,
+        "displayName": "Rollback",
+        "description": "Whether the agent may revert to a previous release. Rollback is a separate action type from deploy: undoing a release carries different risk from making one.",
+        "enum": [
+          "yes",
+          "no"
+        ]
+      }
+    }
+  },
+  "contextSchema": {
+    "keyOrder": [
+      "allowed_repos",
+      "allowed_environments",
+      "allowed_workflows",
+      "allowed_branches"
+    ],
+    "fields": {
+      "allowed_repos": {
+        "type": "string",
+        "required": true,
+        "displayName": "Allowed repositories",
+        "description": "Repositories the agent may deploy from, e.g. humanagencyprotocol/hap",
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      },
+      "allowed_environments": {
+        "type": "string",
+        "required": true,
+        "displayName": "Allowed environments",
+        "description": "Deployment targets the agent may reach. Deliberately NOT an enum: hosts disagree — GitHub uses names you define, Vercel has production and preview, Netlify has deploy-preview and branch-deploy. The connector discovers the real list.",
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      },
+      "allowed_workflows": {
+        "type": "string",
+        "required": true,
+        "displayName": "Allowed pipelines",
+        "description": "Named pipelines the agent may run, e.g. deploy.yml. Scoping by pipeline rather than by 'deploy' means adding CI later — a migration, an infrastructure apply — is an edit to this list, not a new profile. The limit of this approach: the grant knows a pipeline is permitted, not what it does. The name has to carry that meaning to the human signing.",
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      },
+      "allowed_branches": {
+        "type": "string",
+        "required": false,
+        "displayName": "Allowed branches",
+        "description": "Branches a deployable commit may come from. Optional: a host with no branch concept leaves it empty.",
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      }
+    }
+  },
+  "executionContextSchema": {
+    "fields": {
+      "action_type": {
+        "source": "static",
+        "description": "deploy or rollback — declared by the manifest, never taken from an agent argument",
+        "required": true,
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "equals"
+          ]
+        }
+      },
+      "allowed_repos": {
+        "source": "declared",
+        "description": "Repository this action targets, checked against the authorized set",
+        "required": true,
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      },
+      "allowed_environments": {
+        "source": "declared",
+        "description": "Environment this action targets, checked against the authorized set. Recorded in the receipt, so the proof names where the release went.",
+        "required": true,
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      },
+      "allowed_workflows": {
+        "source": "declared",
+        "description": "Pipeline this action runs, checked against the authorized set. Recorded in the receipt, so the proof names what ran.",
+        "required": true,
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      }
+    }
+  },
+  "requiredGates": [
+    "bounds",
+    "intent",
+    "commitment",
+    "decision_owner"
+  ],
+  "ttl": {
+    "default": 2592000,
+    "max": 31536000
+  },
+  "retention_minimum": 7776000,
+  "content_binding": {
+    "version": "1",
+    "kind": "text"
+  }
+}
