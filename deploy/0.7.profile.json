@@ -2,11 +2,11 @@
   "id": "github.com/humanagencyprotocol/hap-profiles/deploy@0.7",
   "name": "Deploy",
   "version": "0.7",
-  "description": "Authority to make already-built software live. Successor to deploy@0.6, which gated 'build and deploy this commit'; this gates 'promote this artifact', because building is not consequential and publishing is. Promotion activates bytes that already exist, so the human can inspect the artifact before approving and no rebuild can diverge from what was approved. Host-agnostic: the artifact identifier is a Vercel deployment id, a container image digest, an Azure slot — the connector manifest names it, this profile never does.",
+  "description": "Authority to make an already-built version live. Successor to deploy@0.6, which gated 'build and deploy this commit'; this gates the act of putting something in front of real users, because building is not consequential and going live is. The action is a RELEASE: it activates bytes that already exist, so the human can look at the artifact before approving and no rebuild can diverge from what was approved. Host-agnostic — the artifact identifier is a Vercel deployment id, a container image digest, an Azure slot — named by the connector manifest, never here.",
   "boundsSchema": {
     "keyOrder": [
       "profile",
-      "promote_daily_max",
+      "release_daily_max",
       "rollback_allowed"
     ],
     "fields": {
@@ -14,11 +14,11 @@
         "type": "string",
         "required": true
       },
-      "promote_daily_max": {
+      "release_daily_max": {
         "type": "number",
         "required": true,
-        "displayName": "Daily promotion limit",
-        "description": "How often software may be made live per day. Counted by the Authority Server, so a compromised gateway cannot exceed it. Creating a preview is NOT counted here — it is not consequential.",
+        "displayName": "Times per day something may go live",
+        "description": "How often the agent may make a build live for real users. Counted by the Authority Server, so a compromised gateway cannot exceed it. Building a preview is NOT counted: previews harm nobody, and charging them against this limit would exhaust it before anything reached anyone.",
         "unit": "count",
         "boundType": {
           "kind": "cumulative_count",
@@ -28,7 +28,7 @@
       "rollback_allowed": {
         "type": "string",
         "required": true,
-        "displayName": "Rollback",
+        "displayName": "May put a previous version back live",
         "description": "Whether the agent may promote a PREVIOUS artifact back to live. Its own action type: reverting carries different risk from releasing, and the artifact being restored was approved for a moment that has passed.",
         "enum": [
           "yes",
@@ -106,7 +106,7 @@
     "fields": {
       "action_type": {
         "source": "static",
-        "description": "promote or rollback — declared by the manifest, never taken from an agent argument",
+        "description": "release or rollback — declared by the manifest, never taken from an agent argument",
         "required": true,
         "constraint": {
           "type": "string",
