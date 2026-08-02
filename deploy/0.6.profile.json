@@ -33,7 +33,14 @@
         "enum": [
           "yes",
           "no"
-        ]
+        ],
+        "boundType": {
+          "kind": "enum",
+          "values": [
+            "yes",
+            "no"
+          ]
+        }
       }
     }
   },
