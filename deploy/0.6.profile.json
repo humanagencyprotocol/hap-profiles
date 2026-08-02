@@ -1,8 +1,8 @@
 {
-  "id": "deploy",
+  "id": "github.com/humanagencyprotocol/hap-profiles/deploy@0.6",
   "name": "Deploy",
   "version": "0.6",
-  "description": "Authority to put software live. Successor to deploy-gate@0.2, HAP's first profile — renamed because the old id is bound to a structure (flat frame, disclosure_hash) that no longer exists. Deliberately host-agnostic: every deployment system has something to deploy, somewhere to put it, a rate worth capping and a notion of undo. Provider vocabulary (GitHub 'environment', Vercel 'target', Netlify 'context') lives in the connector manifest, never here.",
+  "description": "Authority to put software live. Successor to deploy-gate@0.2, HAP's first profile \u2014 renamed because the old id is bound to a structure (flat frame, disclosure_hash) that no longer exists. Deliberately host-agnostic: every deployment system has something to deploy, somewhere to put it, a rate worth capping and a notion of undo. Provider vocabulary (GitHub 'environment', Vercel 'target', Netlify 'context') lives in the connector manifest, never here.",
   "boundsSchema": {
     "keyOrder": [
       "profile",
@@ -61,7 +61,7 @@
         "type": "string",
         "required": true,
         "displayName": "Allowed environments",
-        "description": "Deployment targets the agent may reach. Deliberately NOT an enum: hosts disagree — GitHub uses names you define, Vercel has production and preview, Netlify has deploy-preview and branch-deploy. The connector discovers the real list.",
+        "description": "Deployment targets the agent may reach. Deliberately NOT an enum: hosts disagree \u2014 GitHub uses names you define, Vercel has production and preview, Netlify has deploy-preview and branch-deploy. The connector discovers the real list.",
         "constraint": {
           "type": "string",
           "enforceable": [
@@ -73,7 +73,7 @@
         "type": "string",
         "required": true,
         "displayName": "Allowed pipelines",
-        "description": "Named pipelines the agent may run, e.g. deploy.yml. Scoping by pipeline rather than by 'deploy' means adding CI later — a migration, an infrastructure apply — is an edit to this list, not a new profile. The limit of this approach: the grant knows a pipeline is permitted, not what it does. The name has to carry that meaning to the human signing.",
+        "description": "Named pipelines the agent may run, e.g. deploy.yml. Scoping by pipeline rather than by 'deploy' means adding CI later \u2014 a migration, an infrastructure apply \u2014 is an edit to this list, not a new profile. The limit of this approach: the grant knows a pipeline is permitted, not what it does. The name has to carry that meaning to the human signing.",
         "constraint": {
           "type": "string",
           "enforceable": [
@@ -99,7 +99,7 @@
     "fields": {
       "action_type": {
         "source": "static",
-        "description": "deploy or rollback — declared by the manifest, never taken from an agent argument",
+        "description": "deploy or rollback \u2014 declared by the manifest, never taken from an agent argument",
         "required": true,
         "constraint": {
           "type": "string",
