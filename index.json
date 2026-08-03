@@ -4,6 +4,7 @@
     "github.com/humanagencyprotocol/hap-profiles/charge@0.4": "charge/0.4.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/purchase@0.4": "purchase/0.4.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/email@0.4": "email/0.4.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/email@0.5": "email/0.5.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/customers@0.4": "customers/0.4.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/customers@0.5": "customers/0.5.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/customers@0.6": "customers/0.6.profile.json",
