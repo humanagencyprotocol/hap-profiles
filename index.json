@@ -12,6 +12,7 @@
     "github.com/humanagencyprotocol/hap-profiles/publish@0.4": "publish/0.4.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/records@0.4": "records/0.4.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/deploy@0.6": "deploy/0.6.profile.json",
-    "github.com/humanagencyprotocol/hap-profiles/deploy@0.7": "deploy/0.7.profile.json"
+    "github.com/humanagencyprotocol/hap-profiles/deploy@0.7": "deploy/0.7.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/deploy@0.8": "deploy/0.8.profile.json"
   }
 }
