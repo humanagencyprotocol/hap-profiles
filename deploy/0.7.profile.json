@@ -164,5 +164,6 @@
   "content_binding": {
     "version": "1",
     "kind": "text"
-  }
+  },
+  "receipt_lookup": true
 }
