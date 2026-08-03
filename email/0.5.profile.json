@@ -3,6 +3,7 @@
   "name": "Email",
   "version": "0.5",
   "description": "Email authority — governs sending, drafting, and reading email via Gmail",
+  "whatsNew": "Binds the recipients to the receipt, not only the message body — an approved message can no longer be delivered to someone else without breaking the proof.",
   "boundsSchema": {
     "keyOrder": [
       "profile",
