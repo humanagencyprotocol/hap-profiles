@@ -20,6 +20,7 @@
     "github.com/humanagencyprotocol/hap-profiles/purchase@0.5": "purchase/0.5.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/email@0.6": "email/0.6.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/customers@0.7": "customers/0.7.profile.json",
-    "github.com/humanagencyprotocol/hap-profiles/deploy@0.9": "deploy/0.9.profile.json"
+    "github.com/humanagencyprotocol/hap-profiles/deploy@0.9": "deploy/0.9.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/charge@0.5": "charge/0.5.profile.json"
   }
 }
