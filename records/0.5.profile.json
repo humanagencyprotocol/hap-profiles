@@ -1,0 +1,117 @@
+{
+  "id": "github.com/humanagencyprotocol/hap-profiles/records@0.5",
+  "name": "Records",
+  "version": "0.5",
+  "description": "Records authority — governs accessing and managing personal structured data",
+  "boundsSchema": {
+    "actionTypes": [
+      "archive",
+      "delete",
+      "write"
+    ],
+    "keyOrder": [
+      "profile",
+      "read_access",
+      "write_daily_max",
+      "delete_access",
+      "archive_access"
+    ],
+    "fields": {
+      "profile": {
+        "type": "string",
+        "required": true
+      },
+      "read_access": {
+        "type": "string",
+        "required": true,
+        "displayName": "Read access",
+        "description": "Allow the agent to list, view, and search your records",
+        "boundType": {
+          "kind": "enum",
+          "values": [
+            "unlimited",
+            "none"
+          ]
+        },
+        "toolsDescription": "list_records, get_record, search_records",
+        "default": "unlimited"
+      },
+      "write_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Daily create limit",
+        "description": "Maximum new records the agent can create per day",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "write"
+        ]
+      },
+      "delete_access": {
+        "type": "string",
+        "required": true,
+        "displayName": "Delete access",
+        "description": "Allow the agent to permanently delete records",
+        "boundType": {
+          "kind": "enum",
+          "values": [
+            "allowed",
+            "none"
+          ]
+        },
+        "toolsDescription": "delete_record",
+        "default": "none"
+      },
+      "archive_access": {
+        "type": "string",
+        "required": true,
+        "displayName": "Archive access",
+        "description": "Allow the agent to archive records (non-destructive, records remain accessible)",
+        "boundType": {
+          "kind": "enum",
+          "values": [
+            "allowed",
+            "none"
+          ]
+        },
+        "toolsDescription": "archive_record",
+        "default": "none"
+      }
+    }
+  },
+  "executionContextSchema": {
+    "fields": {
+      "write_count_daily": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "daily",
+        "description": "Running daily create operation count",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
+      }
+    }
+  },
+  "requiredGates": [
+    "bounds",
+    "intent",
+    "commitment",
+    "decision_owner"
+  ],
+  "ttl": {
+    "default": 86400,
+    "max": 31536000
+  },
+  "retention_minimum": 7776000,
+  "content_binding": {
+    "version": "1",
+    "kind": "jcs"
+  }
+}

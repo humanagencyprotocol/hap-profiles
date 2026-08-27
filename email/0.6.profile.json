@@ -1,0 +1,208 @@
+{
+  "id": "github.com/humanagencyprotocol/hap-profiles/email@0.6",
+  "name": "Email",
+  "version": "0.6",
+  "description": "Email authority — governs sending, drafting, and reading email via Gmail",
+  "whatsNew": "Binds the recipients to the receipt, not only the message body — an approved message can no longer be delivered to someone else without breaking the proof.",
+  "boundsSchema": {
+    "actionTypes": [
+      "delete",
+      "send"
+    ],
+    "keyOrder": [
+      "profile",
+      "recipient_max",
+      "send_daily_max",
+      "read_max_age_days",
+      "read_daily_max"
+    ],
+    "fields": {
+      "profile": {
+        "type": "string",
+        "required": true
+      },
+      "recipient_max": {
+        "type": "number",
+        "required": false,
+        "displayName": "Recipients per email",
+        "description": "Maximum recipients per email",
+        "unit": "count",
+        "boundType": {
+          "kind": "per_transaction",
+          "of": "recipient_count"
+        },
+        "paths": [
+          "email-send",
+          "email-draft"
+        ]
+      },
+      "send_daily_max": {
+        "type": "number",
+        "required": false,
+        "displayName": "Daily send limit",
+        "description": "Maximum emails sent or drafted per day",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "paths": [
+          "email-send",
+          "email-draft"
+        ],
+        "appliesTo": [
+          "send"
+        ]
+      },
+      "read_max_age_days": {
+        "type": "number",
+        "required": false,
+        "displayName": "Max email age (days)",
+        "description": "Maximum age in days for email search. Enforced locally by the Gatekeeper, never by the Authority Server: reads carry no receipt, so no signed check ever reads this value. Set it on the integration instead, where it is live-editable. Kept in the schema as the fallback for grants issued before that setting existed.",
+        "unit": "days",
+        "enforcedBy": "gatekeeper",
+        "boundType": {
+          "kind": "per_transaction",
+          "of": "read_age_days"
+        },
+        "paths": [
+          "email-read"
+        ]
+      },
+      "read_daily_max": {
+        "type": "number",
+        "required": false,
+        "displayName": "Daily read limit",
+        "description": "Not currently enforced: reads carry no receipt, so no component counts them. Hidden from the authorization editor until enforcement exists.",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "paths": [
+          "email-read"
+        ],
+        "enforced": false,
+        "appliesTo": []
+      }
+    }
+  },
+  "contextSchema": {
+    "keyOrder": [
+      "allowed_recipients",
+      "allowed_domains"
+    ],
+    "fields": {
+      "allowed_recipients": {
+        "type": "string",
+        "required": false,
+        "displayName": "Allowed recipients",
+        "format": "email",
+        "description": "Comma-separated list of allowed email addresses",
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ],
+          "requiredFor": [
+            "send"
+          ]
+        }
+      },
+      "allowed_domains": {
+        "type": "string",
+        "required": false,
+        "displayName": "Allowed domains",
+        "format": "domain",
+        "description": "Comma-separated list of allowed recipient domains (e.g. acme.com,partner.org)",
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ],
+          "requiredFor": [
+            "send"
+          ]
+        }
+      }
+    }
+  },
+  "executionContextSchema": {
+    "fields": {
+      "recipient_count": {
+        "source": "declared",
+        "description": "Number of recipients in this email",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
+      },
+      "allowed_recipients": {
+        "source": "declared",
+        "description": "Comma-separated recipient addresses from this call (checked against context)",
+        "required": false,
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      },
+      "allowed_domains": {
+        "source": "declared",
+        "description": "Comma-separated unique recipient domains from this call (checked against context)",
+        "required": false,
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      },
+      "send_count_daily": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "daily",
+        "description": "Running daily send/draft count (resolved from execution log)",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
+      }
+    }
+  },
+  "requiredGates": [
+    "bounds",
+    "intent",
+    "commitment",
+    "decision_owner"
+  ],
+  "ttl": {
+    "default": 86400,
+    "max": 31536000
+  },
+  "retention_minimum": 7776000,
+  "content_binding": {
+    "version": "2",
+    "kind": "jcs",
+    "fields": [
+      "to",
+      "cc",
+      "subject",
+      "body"
+    ],
+    "required_fields": [
+      "to",
+      "body"
+    ],
+    "appliesTo": [
+      "send"
+    ]
+  }
+}
