@@ -1,0 +1,178 @@
+{
+  "id": "github.com/humanagencyprotocol/hap-profiles/deploy@0.10",
+  "name": "Deploy",
+  "version": "0.10",
+  "description": "Authority to make an already-built version live. Successor to deploy@0.6, which gated 'build and deploy this commit'; this gates the act of putting something in front of real users, because building is not consequential and going live is. The action is a RELEASE: it activates bytes that already exist, so the human can look at the artifact before approving and no rebuild can diverge from what was approved. Host-agnostic — the artifact identifier is a Vercel deployment id, a container image digest, an Azure slot — named by the connector manifest, never here.",
+  "boundsSchema": {
+    "actionTypes": [
+      "release"
+    ],
+    "keyOrder": [
+      "profile",
+      "release_daily_max",
+      "rollback_allowed"
+    ],
+    "fields": {
+      "profile": {
+        "type": "string",
+        "required": true
+      },
+      "release_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Times per day something may go live",
+        "description": "How often the agent may make a build live for real users. Counted by the Authority Server, so a compromised gateway cannot exceed it. Building a preview is NOT counted: previews harm nobody, and charging them against this limit would exhaust it before anything reached anyone.",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "release"
+        ]
+      },
+      "rollback_allowed": {
+        "type": "string",
+        "required": false,
+        "displayName": "May put a previous version back live",
+        "description": "Whether the agent may promote a PREVIOUS artifact back to live. Reverting carries different risk from releasing: the artifact being restored was approved for a moment that has passed. NOT CURRENTLY ENFORCED: no executor yet distinguishes a revert from a release — a rollback arrives as a release of older bytes and is counted by release_daily_max. Hidden from the authorization editor until an executor emits action_type \"rollback\" for it; kept in the schema so the distinction stays declared.",
+        "enum": [
+          "yes",
+          "no"
+        ],
+        "boundType": {
+          "kind": "enum",
+          "values": [
+            "yes",
+            "no"
+          ]
+        },
+        "enforced": false,
+        "appliesTo": []
+      }
+    }
+  },
+  "contextSchema": {
+    "keyOrder": [
+      "allowed_repos",
+      "allowed_environments",
+      "allowed_workflows",
+      "allowed_branches"
+    ],
+    "fields": {
+      "allowed_repos": {
+        "type": "string",
+        "required": true,
+        "displayName": "Allowed repositories",
+        "description": "Repositories the agent may deploy from, e.g. humanagencyprotocol/hap",
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      },
+      "allowed_environments": {
+        "type": "string",
+        "required": true,
+        "displayName": "Allowed environments",
+        "description": "Deployment targets the agent may reach. Deliberately NOT an enum: hosts disagree — GitHub uses names you define, Vercel has production and preview, Netlify has deploy-preview and branch-deploy. The connector discovers the real list.",
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      },
+      "allowed_workflows": {
+        "type": "string",
+        "required": true,
+        "displayName": "Allowed pipelines",
+        "description": "Named pipelines the agent may run, e.g. deploy.yml. Scoping by pipeline rather than by 'deploy' means adding CI later — a migration, an infrastructure apply — is an edit to this list, not a new profile. The limit of this approach: the grant knows a pipeline is permitted, not what it does. The name has to carry that meaning to the human signing.",
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      },
+      "allowed_branches": {
+        "type": "string",
+        "required": false,
+        "displayName": "Allowed branches",
+        "description": "Branches a deployable commit may come from. Optional: a host with no branch concept leaves it empty.",
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      }
+    }
+  },
+  "executionContextSchema": {
+    "fields": {
+      "action_type": {
+        "source": "static",
+        "description": "release or rollback — declared by the manifest, never taken from an agent argument",
+        "required": true,
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "equals"
+          ]
+        }
+      },
+      "allowed_repos": {
+        "source": "declared",
+        "description": "Repository this action targets, checked against the authorized set",
+        "required": true,
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      },
+      "allowed_environments": {
+        "source": "declared",
+        "description": "Environment this action targets, checked against the authorized set. Recorded in the receipt, so the proof names where the release went.",
+        "required": true,
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      },
+      "allowed_workflows": {
+        "source": "declared",
+        "description": "Pipeline this action runs, checked against the authorized set. Recorded in the receipt, so the proof names what ran.",
+        "required": true,
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      }
+    }
+  },
+  "requiredGates": [
+    "bounds",
+    "intent",
+    "commitment",
+    "decision_owner"
+  ],
+  "ttl": {
+    "default": 2592000,
+    "max": 31536000
+  },
+  "retention_minimum": 7776000,
+  "content_binding": {
+    "version": "1",
+    "kind": "text"
+  },
+  "receipt_lookup": true,
+  "whatsNew": "Binds the source commit the build came from, not only the artifact address. A released page can show its commit but never its own deployment URL, so this is what lets a reader tie the page they are on to the approval that put it there."
+}
