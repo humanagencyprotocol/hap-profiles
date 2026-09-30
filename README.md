@@ -183,6 +183,26 @@ Governs accessing and modifying personal structured data: queries, schema change
 
 ---
 
+### sales — Sales
+
+Governs quote-to-order in an ERP: draft quotes, send quotes to customers (a binding offer), convert quotes to orders (reserves stock, commits a delivery date). No invoicing, delivery, payments or master data. Reference connector: `@humanagencyp/erp-mcp`, which re-derives the declared value and discount from the document and refuses a mismatch.
+
+| Bound | Type | Purpose |
+|-------|------|---------|
+| `read_access` | enum | Look up items, stock, prices, customers, quotes, orders |
+| `value_max` | per-transaction | Maximum net value of one quote or order |
+| `discount_max` | per-transaction | Maximum discount against list price (percent) |
+| `order_value_daily_max` | cumulative | Daily order value cap (orders only) |
+| `quote_daily_max` | cumulative | Draft quotes per day |
+| `send_daily_max` | cumulative | Quotes sent per day |
+| `order_daily_max` | cumulative | Orders per day |
+
+| Context | Type | Purpose |
+|---------|------|---------|
+| `currency` | enum | Permitted document currency |
+
+---
+
 ## How Profiles Work
 
 A human creates an authorization by selecting a profile and execution path, setting the bounds, and answering the gate questions. Domain owners cryptographically attest to the bounds. The Gatekeeper then enforces those bounds on every tool call:
