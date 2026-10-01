@@ -1,0 +1,187 @@
+{
+  "id": "github.com/humanagencyprotocol/hap-profiles/customers@0.8",
+  "name": "Customer Management",
+  "version": "0.8",
+  "description": "Customer authority — governs CRM operations: contacts, activities, deals, tasks",
+  "boundsSchema": {
+    "actionTypes": [
+      "delete",
+      "write",
+      "setup"
+    ],
+    "keyOrder": [
+      "profile",
+      "read_access",
+      "export_access",
+      "write_daily_max",
+      "delete_daily_max",
+      "setup_daily_max"
+    ],
+    "fields": {
+      "profile": {
+        "type": "string",
+        "required": true
+      },
+      "read_access": {
+        "type": "string",
+        "required": true,
+        "displayName": "Read access",
+        "description": "Allow the agent to browse contacts, timelines, pipeline and tasks. Bulk export is governed separately by Export access.",
+        "boundType": {
+          "kind": "enum",
+          "values": [
+            "unlimited",
+            "none"
+          ]
+        },
+        "toolsDescription": "find_contacts, get_timeline, get_pipeline, list_tasks",
+        "default": "unlimited"
+      },
+      "export_access": {
+        "type": "string",
+        "required": true,
+        "displayName": "Export access",
+        "description": "Allow the agent to export the ENTIRE CRM in one call. Separate from read access because the risk is different in kind: reading one contact and extracting the whole customer database are not the same decision.",
+        "boundType": {
+          "kind": "enum",
+          "values": [
+            "allowed",
+            "none"
+          ]
+        },
+        "toolsDescription": "export_crm",
+        "default": "none"
+      },
+      "write_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Daily write limit",
+        "description": "Maximum CRM write operations per day (creates, updates)",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "paths": [
+          "customers-write"
+        ],
+        "appliesTo": [
+          "write"
+        ]
+      },
+      "delete_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Daily delete limit",
+        "description": "Maximum CRM delete operations per day",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "paths": [
+          "customers-delete"
+        ],
+        "appliesTo": [
+          "delete"
+        ]
+      },
+      "setup_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Test-data loads per day",
+        "description": "How many times per day the simulated system may be loaded with a simulation package (load_simulation). Only works while the connector runs in simulation mode, and only into an empty system — a load cannot edit or replace existing test data. 0 = not allowed. Grant it only in a separate setup mandate, never in the mandate the AI uses for its work.",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "setup"
+        ],
+        "default": 0
+      }
+    }
+  },
+  "contextSchema": {
+    "keyOrder": [
+      "contact_type"
+    ],
+    "fields": {
+      "contact_type": {
+        "type": "string",
+        "required": true,
+        "displayName": "Contact types the agent may create or modify",
+        "description": "Contact types the agent may create, update or delete. Does NOT restrict reading — reads are governed by read_access.",
+        "enum": [
+          "customer",
+          "lead",
+          "partner",
+          "vendor"
+        ],
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      }
+    }
+  },
+  "executionContextSchema": {
+    "fields": {
+      "contact_type": {
+        "source": "declared",
+        "description": "Contact type being accessed",
+        "required": true,
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      },
+      "write_count_daily": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "daily",
+        "description": "Running daily write operation count",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
+      },
+      "setup_count_daily": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "daily",
+        "description": "Running daily count of test-data loads",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
+      }
+    }
+  },
+  "requiredGates": [
+    "bounds",
+    "intent",
+    "commitment",
+    "decision_owner"
+  ],
+  "ttl": {
+    "default": 86400,
+    "max": 31536000
+  },
+  "retention_minimum": 7776000,
+  "content_binding": {
+    "version": "1",
+    "kind": "jcs"
+  }
+}

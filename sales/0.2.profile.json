@@ -1,0 +1,282 @@
+{
+  "id": "github.com/humanagencyprotocol/hap-profiles/sales@0.2",
+  "name": "Sales",
+  "version": "0.2",
+  "description": "Sales authority — governs quote-to-order in an ERP: draft quotes, send quotes to customers, convert quotes to orders. No invoicing, delivery, payments or master data.",
+  "boundsSchema": {
+    "actionTypes": [
+      "quote",
+      "send",
+      "order",
+      "setup"
+    ],
+    "keyOrder": [
+      "profile",
+      "read_access",
+      "value_max",
+      "discount_max",
+      "order_value_daily_max",
+      "quote_daily_max",
+      "send_daily_max",
+      "order_daily_max",
+      "setup_daily_max"
+    ],
+    "fields": {
+      "profile": {
+        "type": "string",
+        "required": true
+      },
+      "read_access": {
+        "type": "string",
+        "required": true,
+        "displayName": "Read access",
+        "description": "Allow the agent to look up items, stock, list prices, customers (incl. credit limit and open balance), quotes and orders.",
+        "boundType": {
+          "kind": "enum",
+          "values": [
+            "unlimited",
+            "none"
+          ]
+        },
+        "toolsDescription": "list_items, get_item, find_customers, get_customer, list_quotes, get_quote, list_orders, get_order",
+        "default": "unlimited"
+      },
+      "value_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Max value per quote or order",
+        "description": "Maximum net document total of a single quote or order, in currency units. The connector recalculates the total from the lines and refuses a call whose declared value does not match.",
+        "unit": "currency:EUR",
+        "boundType": {
+          "kind": "per_transaction",
+          "of": "value"
+        }
+      },
+      "discount_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Max discount",
+        "description": "Maximum document discount against list price, in percent. 0 means list price only. The connector recalculates the discount from list prices and refuses a call whose declared discount does not match.",
+        "unit": "percent",
+        "boundType": {
+          "kind": "per_transaction",
+          "of": "discount_pct"
+        }
+      },
+      "order_value_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Daily order value",
+        "description": "Maximum cumulative net value of orders created per day, in currency units.",
+        "unit": "currency:EUR",
+        "boundType": {
+          "kind": "cumulative_sum",
+          "of": "value",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "order"
+        ]
+      },
+      "quote_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Quotes per day",
+        "description": "Maximum draft quotes created or edited per day",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "quote"
+        ]
+      },
+      "send_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Quotes sent per day",
+        "description": "Maximum quotes sent to customers per day. Sending a quote is a binding offer.",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "send"
+        ]
+      },
+      "order_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Orders per day",
+        "description": "Maximum quotes converted to orders per day. An order reserves stock and commits a delivery date.",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "order"
+        ]
+      },
+      "setup_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Test-data loads per day",
+        "description": "How many times per day the simulated system may be loaded with a simulation package (load_simulation). Only works while the connector runs in simulation mode, and only into an empty system — a load cannot edit or replace existing test data. 0 = not allowed. Grant it only in a separate setup mandate, never in the mandate the AI uses for its work.",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "setup"
+        ],
+        "default": 0
+      }
+    }
+  },
+  "contextSchema": {
+    "keyOrder": [
+      "currency"
+    ],
+    "fields": {
+      "currency": {
+        "type": "string",
+        "required": true,
+        "displayName": "Currency",
+        "description": "Permitted document currency",
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "enum"
+          ]
+        },
+        "enum": [
+          "EUR",
+          "CHF",
+          "USD",
+          "GBP"
+        ]
+      }
+    }
+  },
+  "executionContextSchema": {
+    "fields": {
+      "value": {
+        "source": "declared",
+        "description": "Net document total in currency units (verified by the connector against the lines)",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
+      },
+      "discount_pct": {
+        "source": "declared",
+        "description": "Document discount against list price in percent (verified by the connector against list prices)",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
+      },
+      "currency": {
+        "source": "declared",
+        "description": "Document currency",
+        "required": true,
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "enum"
+          ]
+        }
+      },
+      "order_value_daily": {
+        "source": "cumulative",
+        "description": "Running daily order value (resolved from execution log)",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        },
+        "cumulativeField": "value",
+        "window": "daily"
+      },
+      "quote_count_daily": {
+        "source": "cumulative",
+        "description": "Running daily quote count",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        },
+        "cumulativeField": "_count",
+        "window": "daily"
+      },
+      "send_count_daily": {
+        "source": "cumulative",
+        "description": "Running daily send count",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        },
+        "cumulativeField": "_count",
+        "window": "daily"
+      },
+      "order_count_daily": {
+        "source": "cumulative",
+        "description": "Running daily order count",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        },
+        "cumulativeField": "_count",
+        "window": "daily"
+      },
+      "setup_count_daily": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "daily",
+        "description": "Running daily count of test-data loads",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
+      }
+    }
+  },
+  "requiredGates": [
+    "bounds",
+    "intent",
+    "commitment",
+    "decision_owner"
+  ],
+  "ttl": {
+    "default": 86400,
+    "max": 2592000
+  },
+  "retention_minimum": 7776000,
+  "content_binding": {
+    "version": "1",
+    "kind": "jcs"
+  }
+}
