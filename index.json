@@ -26,6 +26,8 @@
     "github.com/humanagencyprotocol/hap-profiles/sales@0.1": "sales/0.1.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/sales@0.2": "sales/0.2.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/customers@0.8": "customers/0.8.profile.json",
-    "github.com/humanagencyprotocol/hap-profiles/email@0.7": "email/0.7.profile.json"
+    "github.com/humanagencyprotocol/hap-profiles/email@0.7": "email/0.7.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/sales@0.3": "sales/0.3.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/purchase@0.6": "purchase/0.6.profile.json"
   }
 }
