@@ -1,0 +1,83 @@
+{
+  "id": "github.com/humanagencyprotocol/hap-profiles/reporting@0.1",
+  "name": "Reporting",
+  "version": "0.1",
+  "description": "Reporting authority — lets an agent read the evidence a gateway holds (tickets, approvals, mandates, records in the systems it connects) and write one report stored on that machine. Changes no system.",
+  "boundsSchema": {
+    "actionTypes": [
+      "report"
+    ],
+    "keyOrder": [
+      "profile",
+      "read_access",
+      "report_daily_max"
+    ],
+    "fields": {
+      "profile": {
+        "type": "string",
+        "required": true
+      },
+      "read_access": {
+        "type": "string",
+        "required": true,
+        "displayName": "Read evidence",
+        "description": "Allow the agent to read tickets, approvals, mandates and the records in connected systems, to build a report",
+        "boundType": {
+          "kind": "enum",
+          "values": [
+            "unlimited",
+            "none"
+          ]
+        },
+        "toolsDescription": "tickets, approvals, mandates, system records",
+        "default": "unlimited"
+      },
+      "report_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Report updates per day",
+        "description": "Maximum times per day the agent may write or replace the report",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "report"
+        ]
+      }
+    }
+  },
+  "executionContextSchema": {
+    "fields": {
+      "report_count_daily": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "daily",
+        "description": "Running daily count of report writes",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
+      }
+    }
+  },
+  "requiredGates": [
+    "bounds",
+    "intent",
+    "commitment",
+    "decision_owner"
+  ],
+  "ttl": {
+    "default": 86400,
+    "max": 2592000
+  },
+  "retention_minimum": 7776000,
+  "content_binding": {
+    "version": "1",
+    "kind": "jcs"
+  }
+}
