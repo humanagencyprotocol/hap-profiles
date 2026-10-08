@@ -31,6 +31,7 @@
     "github.com/humanagencyprotocol/hap-profiles/purchase@0.6": "purchase/0.6.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/reporting@0.1": "reporting/0.1.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/delegation@0.1": "delegation/0.1.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/delegation@0.2": "delegation/0.2.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/reporting@0.2": "reporting/0.2.profile.json"
   }
 }
