@@ -1,0 +1,117 @@
+{
+  "id": "github.com/humanagencyprotocol/hap-profiles/delegation@0.2",
+  "name": "Delegation",
+  "version": "0.2",
+  "description": "Delegation authority — lets an agent propose changes to its own setup: the agent brief and new mandates. Every proposal waits for a person's approval; nothing takes effect before it. Also lets the agent read the setup guides.",
+  "commitment_modes": [
+    "review"
+  ],
+  "boundsSchema": {
+    "actionTypes": [
+      "brief",
+      "mandate"
+    ],
+    "keyOrder": [
+      "profile",
+      "read_access",
+      "brief_daily_max",
+      "mandate_daily_max"
+    ],
+    "fields": {
+      "profile": {
+        "type": "string",
+        "required": true
+      },
+      "read_access": {
+        "type": "string",
+        "required": true,
+        "displayName": "Read setup guides",
+        "description": "Allow the agent to read the guides for setting up a test: interview, test data, mandates, agent brief, the agent's own process, risks.",
+        "boundType": {
+          "kind": "enum",
+          "values": [
+            "unlimited",
+            "none"
+          ]
+        },
+        "toolsDescription": "setup guides",
+        "default": "unlimited"
+      },
+      "brief_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Brief proposals per day",
+        "description": "How many times per day the agent may propose a new agent brief. Each proposal waits for your approval.",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "brief"
+        ],
+        "default": 5
+      },
+      "mandate_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Mandate proposals per day",
+        "description": "How many new mandates per day the agent may propose. Each one waits for your approval and is created only then.",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "mandate"
+        ],
+        "default": 30
+      }
+    }
+  },
+  "executionContextSchema": {
+    "fields": {
+      "brief_count_daily": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "daily",
+        "description": "Running daily count of brief proposals",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
+      },
+      "mandate_count_daily": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "daily",
+        "description": "Running daily count of mandate proposals",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
+      }
+    }
+  },
+  "requiredGates": [
+    "bounds",
+    "intent",
+    "commitment",
+    "decision_owner"
+  ],
+  "ttl": {
+    "default": 86400,
+    "max": 2592000
+  },
+  "retention_minimum": 7776000,
+  "content_binding": {
+    "version": "1",
+    "kind": "jcs"
+  }
+}
