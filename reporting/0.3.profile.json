@@ -1,0 +1,98 @@
+{
+  "id": "github.com/humanagencyprotocol/hap-profiles/reporting@0.3",
+  "name": "Reporting",
+  "version": "0.3",
+  "description": "Reporting authority — lets an agent read the evidence a gateway holds (tickets, approvals, mandates, records in the systems it connects) and write one report stored on that machine. Changes no system.",
+  "whatsNew": "Protocol v0.7 wording: the scope schema replaces the context schema, and the required gate is the Mandate Owner. Limits and scope are unchanged.",
+  "boundsSchema": {
+    "actionTypes": [
+      "report"
+    ],
+    "keyOrder": [
+      "profile",
+      "read_access",
+      "read_max_age_days",
+      "report_daily_max"
+    ],
+    "fields": {
+      "profile": {
+        "type": "string",
+        "required": true
+      },
+      "read_access": {
+        "type": "string",
+        "required": true,
+        "displayName": "Read evidence",
+        "description": "Allow the agent to read tickets, approvals, mandates and the records in connected systems, to build a report",
+        "boundType": {
+          "kind": "enum",
+          "values": [
+            "unlimited",
+            "none"
+          ]
+        },
+        "toolsDescription": "tickets, approvals, mandates, system records",
+        "default": "unlimited"
+      },
+      "read_max_age_days": {
+        "type": "number",
+        "required": true,
+        "displayName": "Reporting window (days)",
+        "description": "How far back the agent may read evidence for a report: tickets, approvals, mandates and records from the last N days, at most 366. Anything older is invisible to the agent and cannot enter a report or an export. Enforced locally by the gateway (reads carry no ticket); signed here so the window the owner approved is part of the mandate.",
+        "unit": "days",
+        "boundType": {
+          "kind": "per_transaction",
+          "of": "read_age_days"
+        },
+        "maximum": 366,
+        "default": 30
+      },
+      "report_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Report updates per day",
+        "description": "Maximum times per day the agent may write or replace the report",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "report"
+        ]
+      }
+    }
+  },
+  "executionContextSchema": {
+    "fields": {
+      "report_count_daily": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "daily",
+        "description": "Running daily count of report writes",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
+      }
+    }
+  },
+  "requiredGates": [
+    "bounds",
+    "intent",
+    "commitment",
+    "mandate_owner"
+  ],
+  "ttl": {
+    "default": 86400,
+    "max": 2592000
+  },
+  "retention_minimum": 7776000,
+  "content_binding": {
+    "version": "1",
+    "kind": "jcs"
+  }
+}
