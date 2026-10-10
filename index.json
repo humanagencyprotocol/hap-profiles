@@ -44,6 +44,7 @@
     "github.com/humanagencyprotocol/hap-profiles/records@0.6": "records/0.6.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/reporting@0.3": "reporting/0.3.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/sales@0.4": "sales/0.4.profile.json",
-    "github.com/humanagencyprotocol/hap-profiles/customers@0.10": "customers/0.10.profile.json"
+    "github.com/humanagencyprotocol/hap-profiles/customers@0.10": "customers/0.10.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/delegation@0.4": "delegation/0.4.profile.json"
   }
 }
