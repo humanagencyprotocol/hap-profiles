@@ -1,0 +1,232 @@
+{
+  "id": "github.com/humanagencyprotocol/hap-profiles/charge@0.7",
+  "name": "Payments",
+  "version": "0.7",
+  "description": "Payments authority — governs collecting money from customers through a payment provider: payment links and payments, seeing whether money came in, and managing payment customers. Invoices and credit notes are Invoicing; refunds, subscriptions and outgoing money are not covered.",
+  "whatsNew": "Now called Payments. Payment links and payments need an amount within the limit (an open-amount link is refused), reads have their own switch, and managing payment customers is its own act. Refunds and subscriptions are no longer covered.",
+  "boundsSchema": {
+    "actionTypes": [
+      "charge",
+      "manage"
+    ],
+    "keyOrder": [
+      "profile",
+      "read_access",
+      "amount_max",
+      "amount_daily_max",
+      "amount_monthly_max",
+      "charge_daily_max",
+      "manage_daily_max"
+    ],
+    "fields": {
+      "profile": {
+        "type": "string",
+        "required": true
+      },
+      "read_access": {
+        "type": "string",
+        "required": true,
+        "displayName": "Read access",
+        "description": "Allow the agent to look up payments, payment links, payment customers and balances — including whether money came in.",
+        "boundType": {
+          "kind": "enum",
+          "values": [
+            "unlimited",
+            "none"
+          ]
+        },
+        "default": "unlimited"
+      },
+      "amount_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Max per payment",
+        "description": "Maximum amount of a single payment or payment link, in currency units. A call that states no amount (an open-amount link) is refused.",
+        "unit": "currency:EUR",
+        "boundType": {
+          "kind": "per_transaction",
+          "of": "amount",
+          "requiredFor": [
+            "charge"
+          ]
+        }
+      },
+      "amount_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Collected per day",
+        "description": "Maximum cumulative amount of payments and payment links created per day.",
+        "unit": "currency:EUR",
+        "boundType": {
+          "kind": "cumulative_sum",
+          "of": "amount",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "charge"
+        ]
+      },
+      "amount_monthly_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Collected per month",
+        "description": "Maximum cumulative amount of payments and payment links created per month.",
+        "unit": "currency:EUR",
+        "boundType": {
+          "kind": "cumulative_sum",
+          "of": "amount",
+          "window": "monthly"
+        },
+        "appliesTo": [
+          "charge"
+        ]
+      },
+      "charge_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Payments per day",
+        "description": "Maximum payments and payment links created per day.",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "charge"
+        ]
+      },
+      "manage_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Customer changes per day",
+        "description": "Maximum payment customers created or changed per day. Moves no money.",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "manage"
+        ]
+      }
+    }
+  },
+  "scopeSchema": {
+    "keyOrder": [
+      "currency"
+    ],
+    "fields": {
+      "currency": {
+        "type": "string",
+        "required": true,
+        "displayName": "Currency",
+        "description": "Permitted currency",
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "enum"
+          ]
+        },
+        "enum": [
+          "EUR",
+          "CHF",
+          "USD",
+          "GBP"
+        ]
+      }
+    }
+  },
+  "executionContextSchema": {
+    "fields": {
+      "amount": {
+        "source": "declared",
+        "description": "Amount of the payment or payment link in currency units",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
+      },
+      "currency": {
+        "source": "declared",
+        "description": "Payment currency",
+        "required": true,
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "enum"
+          ]
+        }
+      },
+      "amount_daily": {
+        "source": "cumulative",
+        "description": "Running daily amount collected",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        },
+        "cumulativeField": "amount",
+        "window": "daily"
+      },
+      "amount_monthly": {
+        "source": "cumulative",
+        "description": "Running monthly amount collected",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        },
+        "cumulativeField": "amount",
+        "window": "monthly"
+      },
+      "charge_count_daily": {
+        "source": "cumulative",
+        "description": "Running daily payment count",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        },
+        "cumulativeField": "_count",
+        "window": "daily"
+      },
+      "manage_count_daily": {
+        "source": "cumulative",
+        "description": "Running daily customer-change count",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        },
+        "cumulativeField": "_count",
+        "window": "daily"
+      }
+    }
+  },
+  "requiredGates": [
+    "bounds",
+    "intent",
+    "commitment",
+    "mandate_owner"
+  ],
+  "ttl": {
+    "default": 86400,
+    "max": 2592000
+  },
+  "retention_minimum": 7776000,
+  "content_binding": {
+    "version": "1",
+    "kind": "jcs"
+  }
+}
