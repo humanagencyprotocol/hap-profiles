@@ -1,0 +1,410 @@
+{
+  "id": "github.com/humanagencyprotocol/hap-profiles/invoicing@0.2",
+  "name": "Invoicing",
+  "version": "0.2",
+  "description": "Invoicing authority — governs issuing invoices and credit notes in the invoicing system (ERP), and the master data they are built from: customers and catalogue items. An issued invoice is never changed or deleted: a cancellation or correction is a credit note with its own number, as German and Austrian law require. A change to a customer's tax data (VAT ID, country, name, address) and a change to an item's price or VAT rate are each a decision of their own. Every action in this area is reviewed by a person. No payments or reminders.",
+  "whatsNew": "Customers and catalogue items can now be created and changed here. Changing a customer's tax data and changing an item's price are separate decisions with their own daily limits. Every action in this area is reviewed by a person (no automatic mode). Invoice and credit-note limits are unchanged.",
+  "boundsSchema": {
+    "actionTypes": [
+      "invoice",
+      "credit",
+      "customer",
+      "customer_tax",
+      "item",
+      "item_price"
+    ],
+    "keyOrder": [
+      "profile",
+      "read_access",
+      "invoice_net_max",
+      "credit_net_max",
+      "invoice_net_monthly_max",
+      "credit_net_monthly_max",
+      "invoice_daily_max",
+      "credit_daily_max",
+      "customer_daily_max",
+      "customer_tax_daily_max",
+      "item_daily_max",
+      "list_price_max",
+      "item_price_daily_max"
+    ],
+    "fields": {
+      "profile": {
+        "type": "string",
+        "required": true
+      },
+      "read_access": {
+        "type": "string",
+        "required": true,
+        "displayName": "Read access",
+        "description": "Allow the agent to look up invoices, credit notes, customers, catalogue items and quotes.",
+        "boundType": {
+          "kind": "enum",
+          "values": [
+            "unlimited",
+            "none"
+          ]
+        },
+        "toolsDescription": "list_invoices, get_invoice, list_credit_notes, get_credit_note, find_customers, get_customer, list_items, get_item, list_quotes, get_quote",
+        "default": "unlimited"
+      },
+      "invoice_net_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Max net per invoice",
+        "description": "Maximum net total of a single invoice, in currency units. The connector recalculates the total from the lines and refuses a call whose declared total does not match.",
+        "unit": "currency:EUR",
+        "boundType": {
+          "kind": "per_transaction",
+          "of": "net_total",
+          "requiredFor": [
+            "invoice"
+          ]
+        }
+      },
+      "credit_net_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Max net per credit note",
+        "description": "Maximum net total of a single credit note (cancellation or correction of an issued invoice), in currency units. Recalculated by the connector like an invoice.",
+        "unit": "currency:EUR",
+        "boundType": {
+          "kind": "per_transaction",
+          "of": "credit_total",
+          "requiredFor": [
+            "credit"
+          ]
+        }
+      },
+      "invoice_net_monthly_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Invoiced per month",
+        "description": "Maximum cumulative net total of invoices issued per month, in currency units.",
+        "unit": "currency:EUR",
+        "boundType": {
+          "kind": "cumulative_sum",
+          "of": "net_total",
+          "window": "monthly"
+        },
+        "appliesTo": [
+          "invoice"
+        ]
+      },
+      "credit_net_monthly_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Credited per month",
+        "description": "Maximum cumulative net total of credit notes issued per month, in currency units.",
+        "unit": "currency:EUR",
+        "boundType": {
+          "kind": "cumulative_sum",
+          "of": "credit_total",
+          "window": "monthly"
+        },
+        "appliesTo": [
+          "credit"
+        ]
+      },
+      "invoice_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Invoices per day",
+        "description": "Maximum invoices issued per day. An issued invoice is a legal document and cannot be withdrawn, only credited.",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "invoice"
+        ]
+      },
+      "credit_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Credit notes per day",
+        "description": "Maximum credit notes issued per day.",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "credit"
+        ]
+      },
+      "customer_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Customer changes per day",
+        "description": "Maximum customers created or changed per day (contact data only — tax data is its own limit).",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "customer"
+        ]
+      },
+      "customer_tax_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Customer tax-data changes per day",
+        "description": "Maximum changes per day to a customer's tax data: VAT ID, country, name or address. These decide how future invoices to that customer are taxed.",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "customer_tax"
+        ]
+      },
+      "item_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Item changes per day",
+        "description": "Maximum catalogue items created or changed per day (name, unit, active — a new item's first price counts here).",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "item"
+        ]
+      },
+      "list_price_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Max list price per item",
+        "description": "Highest net list price a catalogue item may be given, when it is created or its price is changed, in currency units.",
+        "unit": "currency:EUR",
+        "boundType": {
+          "kind": "per_transaction",
+          "of": "list_price",
+          "requiredFor": [
+            "item_price"
+          ]
+        }
+      },
+      "item_price_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Price changes per day",
+        "description": "Maximum price or VAT-rate changes to existing catalogue items per day.",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "item_price"
+        ]
+      }
+    }
+  },
+  "scopeSchema": {
+    "keyOrder": [
+      "currency"
+    ],
+    "fields": {
+      "currency": {
+        "type": "string",
+        "required": true,
+        "displayName": "Currency",
+        "description": "Permitted invoice currency",
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "enum"
+          ],
+          "values": [
+            "EUR",
+            "CHF",
+            "USD",
+            "GBP"
+          ]
+        },
+        "enum": [
+          "EUR",
+          "CHF",
+          "USD",
+          "GBP"
+        ]
+      }
+    }
+  },
+  "executionContextSchema": {
+    "fields": {
+      "net_total": {
+        "source": "declared",
+        "description": "Net total of the invoice in currency units (verified by the connector against the lines)",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
+      },
+      "credit_total": {
+        "source": "declared",
+        "description": "Net total of the credit note in currency units (verified by the connector against the lines). Kept apart from net_total so an invoice limit never applies to a credit note, and the other way round.",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
+      },
+      "currency": {
+        "source": "declared",
+        "description": "Document currency",
+        "required": true,
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "enum"
+          ]
+        }
+      },
+      "invoice_net_monthly": {
+        "source": "cumulative",
+        "description": "Running monthly net total invoiced",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        },
+        "cumulativeField": "net_total",
+        "window": "monthly"
+      },
+      "credit_net_monthly": {
+        "source": "cumulative",
+        "description": "Running monthly net total credited",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        },
+        "cumulativeField": "credit_total",
+        "window": "monthly"
+      },
+      "invoice_count_daily": {
+        "source": "cumulative",
+        "description": "Running daily invoice count",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        },
+        "cumulativeField": "_count",
+        "window": "daily"
+      },
+      "credit_count_daily": {
+        "source": "cumulative",
+        "description": "Running daily credit note count",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        },
+        "cumulativeField": "_count",
+        "window": "daily"
+      },
+      "list_price": {
+        "source": "declared",
+        "description": "Net list price of the item in currency units (create_item, update_item_price)",
+        "required": false,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
+      },
+      "customer_count_daily": {
+        "source": "cumulative",
+        "description": "Running daily count of customer creates and contact-data changes",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        },
+        "cumulativeField": "_count",
+        "window": "daily"
+      },
+      "customer_tax_count_daily": {
+        "source": "cumulative",
+        "description": "Running daily count of customer tax-data changes",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        },
+        "cumulativeField": "_count",
+        "window": "daily"
+      },
+      "item_count_daily": {
+        "source": "cumulative",
+        "description": "Running daily count of item creates and changes",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        },
+        "cumulativeField": "_count",
+        "window": "daily"
+      },
+      "item_price_count_daily": {
+        "source": "cumulative",
+        "description": "Running daily count of item price changes",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        },
+        "cumulativeField": "_count",
+        "window": "daily"
+      }
+    }
+  },
+  "requiredGates": [
+    "bounds",
+    "intent",
+    "commitment",
+    "mandate_owner"
+  ],
+  "commitment_modes": [
+    "review"
+  ],
+  "ttl": {
+    "default": 86400,
+    "max": 2592000
+  },
+  "retention_minimum": 7776000,
+  "content_binding": {
+    "version": "1",
+    "kind": "jcs"
+  }
+}

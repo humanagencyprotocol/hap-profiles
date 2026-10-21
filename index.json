@@ -55,6 +55,7 @@
     "github.com/humanagencyprotocol/hap-profiles/invoicing@0.1": "invoicing/0.1.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/charge@0.7": "charge/0.7.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/email@0.9": "email/0.9.profile.json",
-    "github.com/humanagencyprotocol/hap-profiles/delegation@0.6": "delegation/0.6.profile.json"
+    "github.com/humanagencyprotocol/hap-profiles/delegation@0.6": "delegation/0.6.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/invoicing@0.2": "invoicing/0.2.profile.json"
   }
 }
