@@ -56,6 +56,19 @@
     "github.com/humanagencyprotocol/hap-profiles/charge@0.7": "charge/0.7.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/email@0.9": "email/0.9.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/delegation@0.6": "delegation/0.6.profile.json",
-    "github.com/humanagencyprotocol/hap-profiles/master-data@0.1": "master-data/0.1.profile.json"
+    "github.com/humanagencyprotocol/hap-profiles/master-data@0.1": "master-data/0.1.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/calendar@0.7": "calendar/0.7.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/charge@0.8": "charge/0.8.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/customers@0.12": "customers/0.12.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/delegation@0.7": "delegation/0.7.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/deploy@0.13": "deploy/0.13.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/email@0.11": "email/0.11.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/invoicing@0.2": "invoicing/0.2.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/master-data@0.2": "master-data/0.2.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/publish@0.8": "publish/0.8.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/purchase@0.9": "purchase/0.9.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/records@0.7": "records/0.7.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/reporting@0.5": "reporting/0.5.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/sales@0.5": "sales/0.5.profile.json"
   }
 }
