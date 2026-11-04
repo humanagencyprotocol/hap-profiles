@@ -3,7 +3,7 @@
   "name": "Calendar",
   "version": "0.7",
   "description": "Calendar authority — governs calendar access: reading, drafting, and booking events",
-  "whatsNew": "Protocol v0.8. Limits, scope and gates are unchanged; this version is checked against v0.8, under which an Authority Server issues mandates.",
+  "whatsNew": "Protocol v0.8. A booking that declares no duration or no date is now refused, so both limits hold for every booking. Scope and gates are unchanged.",
   "boundsSchema": {
     "actionTypes": [
       "booking",
@@ -42,7 +42,10 @@
         "unit": "minutes",
         "boundType": {
           "kind": "per_transaction",
-          "of": "duration"
+          "of": "duration",
+          "requiredFor": [
+            "booking"
+          ]
         }
       },
       "lookahead_days_max": {
@@ -53,7 +56,10 @@
         "unit": "days",
         "boundType": {
           "kind": "per_transaction",
-          "of": "lookahead"
+          "of": "lookahead",
+          "requiredFor": [
+            "booking"
+          ]
         }
       }
     }

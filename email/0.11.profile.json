@@ -3,7 +3,7 @@
   "name": "Email",
   "version": "0.11",
   "description": "Email authority — governs sending, drafting, and reading email via Gmail",
-  "whatsNew": "Protocol v0.8. Limits, scope and gates are unchanged; this version is checked against v0.8, under which an Authority Server issues mandates.",
+  "whatsNew": "Protocol v0.8. A send that declares no recipient count is now refused, so the recipient limit holds for every send. Scope and gates are unchanged.",
   "boundsSchema": {
     "actionTypes": [
       "delete",
@@ -31,7 +31,10 @@
         "unit": "count",
         "boundType": {
           "kind": "per_transaction",
-          "of": "recipient_count"
+          "of": "recipient_count",
+          "requiredFor": [
+            "send"
+          ]
         }
       },
       "send_daily_max": {
