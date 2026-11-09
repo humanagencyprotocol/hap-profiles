@@ -1,0 +1,88 @@
+{
+  "id": "github.com/humanagencyprotocol/hap-profiles/files@0.1",
+  "name": "Files",
+  "version": "0.1",
+  "description": "Files authority — governs saving files into the Files connector on this computer and looking them up. Saving takes a file from the shared folder and keeps an unchangeable copy; nothing leaves the computer. Sending a saved file is governed by the email profile, which names the files it may attach. No content binding: saving leaves nothing outside.",
+  "whatsNew": "New area. Files saved per day are limited by a daily count. Each mandate is reviewed by a person or automatic, as the Mandate Owner chooses.",
+  "commitment_modes": [
+    "review",
+    "automatic"
+  ],
+  "boundsSchema": {
+    "actionTypes": [
+      "save"
+    ],
+    "keyOrder": [
+      "profile",
+      "read_access",
+      "save_daily_max"
+    ],
+    "fields": {
+      "profile": {
+        "type": "string",
+        "required": true
+      },
+      "read_access": {
+        "type": "string",
+        "required": true,
+        "displayName": "Read access",
+        "description": "Allow the agent to list the saved files",
+        "boundType": {
+          "kind": "enum",
+          "values": [
+            "unlimited",
+            "none"
+          ]
+        },
+        "toolsDescription": "list_files",
+        "default": "unlimited"
+      },
+      "save_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Daily save limit",
+        "description": "Maximum files the agent can save per day",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "save"
+        ]
+      }
+    }
+  },
+  "executionContextSchema": {
+    "fields": {
+      "save_count_daily": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "daily",
+        "description": "Running daily count of files saved",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
+      }
+    }
+  },
+  "requiredGates": [
+    "bounds",
+    "intent",
+    "commitment",
+    "mandate_owner"
+  ],
+  "ttl": {
+    "default": 86400,
+    "max": 31536000
+  },
+  "retention_minimum": 7776000,
+  "content_binding": {
+    "version": "1",
+    "kind": "jcs"
+  }
+}

@@ -57,6 +57,7 @@
     "github.com/humanagencyprotocol/hap-profiles/charge@0.7": "charge/0.7.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/email@0.9": "email/0.9.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/delegation@0.6": "delegation/0.6.profile.json",
-    "github.com/humanagencyprotocol/hap-profiles/master-data@0.1": "master-data/0.1.profile.json"
+    "github.com/humanagencyprotocol/hap-profiles/master-data@0.1": "master-data/0.1.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/files@0.1": "files/0.1.profile.json"
   }
 }
