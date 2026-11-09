@@ -1,8 +1,8 @@
 {
-  "id": "github.com/humanagencyprotocol/hap-profiles/documents@0.1",
-  "name": "Documents",
+  "id": "github.com/humanagencyprotocol/hap-profiles/files@0.1",
+  "name": "Files",
   "version": "0.1",
-  "description": "Documents authority — governs saving files into the Documents connector on this computer and looking them up. Saving takes a file from the shared folder and keeps an unchangeable copy; nothing leaves the computer. Sending a saved file is governed by the email profile, which names the documents it may attach. No content binding: saving leaves nothing outside.",
+  "description": "Files authority — governs saving files into the Files connector on this computer and looking them up. Saving takes a file from the shared folder and keeps an unchangeable copy; nothing leaves the computer. Sending a saved file is governed by the email profile, which names the files it may attach. No content binding: saving leaves nothing outside.",
   "whatsNew": "New area. Files saved per day are limited by a daily count. Each mandate is reviewed by a person or automatic, as the Mandate Owner chooses.",
   "commitment_modes": [
     "review",
@@ -26,7 +26,7 @@
         "type": "string",
         "required": true,
         "displayName": "Read access",
-        "description": "Allow the agent to list the saved documents",
+        "description": "Allow the agent to list the saved files",
         "boundType": {
           "kind": "enum",
           "values": [
@@ -34,7 +34,7 @@
             "none"
           ]
         },
-        "toolsDescription": "list_documents",
+        "toolsDescription": "list_files",
         "default": "unlimited"
       },
       "save_daily_max": {
