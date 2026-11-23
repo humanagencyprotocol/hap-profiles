@@ -59,6 +59,8 @@
     "github.com/humanagencyprotocol/hap-profiles/delegation@0.6": "delegation/0.6.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/master-data@0.1": "master-data/0.1.profile.json",
     "github.com/humanagencyprotocol/hap-profiles/files@0.1": "files/0.1.profile.json",
-    "github.com/humanagencyprotocol/hap-profiles/email@0.10": "email/0.10.profile.json"
+    "github.com/humanagencyprotocol/hap-profiles/email@0.10": "email/0.10.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/publish@0.9": "publish/0.9.profile.json",
+    "github.com/humanagencyprotocol/hap-profiles/email@0.11": "email/0.11.profile.json"
   }
 }
