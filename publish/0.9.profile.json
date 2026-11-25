@@ -1,0 +1,230 @@
+{
+  "id": "github.com/humanagencyprotocol/hap-profiles/publish@0.9",
+  "name": "Publishing",
+  "version": "0.9",
+  "description": "Publishing authority — governs posting public content to social media, blogs, and other platforms",
+  "whatsNew": "A new limit: posts per week, counted over the last 7 days. It is optional; set it next to the daily and monthly limits. Everything else is unchanged from 0.8, and mandates under 0.8 keep working until they end.",
+  "boundsSchema": {
+    "actionTypes": [
+      "delete",
+      "post"
+    ],
+    "keyOrder": [
+      "profile",
+      "post_daily_max",
+      "post_weekly_max",
+      "post_monthly_max"
+    ],
+    "fields": {
+      "profile": {
+        "type": "string",
+        "required": true
+      },
+      "post_daily_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Daily post limit",
+        "description": "Maximum posts published per day",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "daily"
+        },
+        "appliesTo": [
+          "post"
+        ]
+      },
+      "post_weekly_max": {
+        "type": "number",
+        "required": false,
+        "displayName": "Weekly post limit",
+        "description": "Maximum posts published in the last 7 days",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "weekly"
+        },
+        "appliesTo": [
+          "post"
+        ]
+      },
+      "post_monthly_max": {
+        "type": "number",
+        "required": true,
+        "displayName": "Monthly post limit",
+        "description": "Maximum posts published per month",
+        "unit": "count",
+        "boundType": {
+          "kind": "cumulative_count",
+          "window": "monthly"
+        },
+        "appliesTo": [
+          "post"
+        ]
+      }
+    }
+  },
+  "scopeSchema": {
+    "keyOrder": [
+      "allowed_platforms",
+      "content_type",
+      "audience"
+    ],
+    "fields": {
+      "allowed_platforms": {
+        "type": "string",
+        "required": true,
+        "displayName": "Platforms",
+        "description": "Authorized publishing platforms",
+        "enum": [
+          "linkedin"
+        ],
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      },
+      "content_type": {
+        "type": "string",
+        "required": true,
+        "displayName": "Content types",
+        "description": "Authorized content formats",
+        "enum": [
+          "text",
+          "image",
+          "article"
+        ],
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      },
+      "audience": {
+        "type": "string",
+        "required": true,
+        "displayName": "Audience",
+        "description": "Authorized audience visibility",
+        "enum": [
+          "public",
+          "connections"
+        ],
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      }
+    }
+  },
+  "executionContextSchema": {
+    "fields": {
+      "allowed_platforms": {
+        "source": "declared",
+        "description": "Platform being published to (checked against authorized platforms)",
+        "required": true,
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      },
+      "content_type": {
+        "source": "declared",
+        "description": "Content format being published",
+        "required": true,
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      },
+      "audience": {
+        "source": "declared",
+        "description": "Audience visibility for this post",
+        "required": true,
+        "constraint": {
+          "type": "string",
+          "enforceable": [
+            "subset"
+          ]
+        }
+      },
+      "post_count_daily": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "daily",
+        "description": "Running daily post count (resolved from execution log)",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
+      },
+      "post_count_weekly": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "weekly",
+        "description": "Running weekly post count, the last 7 days (resolved from execution log)",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
+      },
+      "post_count_monthly": {
+        "source": "cumulative",
+        "cumulativeField": "_count",
+        "window": "monthly",
+        "description": "Running monthly post count (resolved from execution log)",
+        "required": true,
+        "constraint": {
+          "type": "number",
+          "enforceable": [
+            "max"
+          ]
+        }
+      }
+    }
+  },
+  "requiredGates": [
+    "bounds",
+    "intent",
+    "commitment",
+    "mandate_owner"
+  ],
+  "ttl": {
+    "default": 86400,
+    "max": 31536000
+  },
+  "retention_minimum": 7776000,
+  "content_binding": {
+    "version": "2",
+    "kind": "jcs",
+    "fields": [
+      "text",
+      "imageUrl",
+      "imagePath",
+      "altText",
+      "articleUrl",
+      "title",
+      "description"
+    ],
+    "required_fields": [
+      "text"
+    ],
+    "appliesTo": [
+      "post"
+    ]
+  }
+}
