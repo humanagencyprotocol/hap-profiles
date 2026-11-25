@@ -1,7 +1,7 @@
 {
-  "id": "github.com/humanagencyprotocol/hap-profiles/customers@0.12",
+  "id": "github.com/humanagencyprotocol/hap-profiles/customers@0.13",
   "name": "Customers",
-  "version": "0.12",
+  "version": "0.13",
   "description": "Customer authority — governs CRM operations: contacts, activities, deals, tasks",
   "whatsNew": "Protocol v0.8. The contact types are now declared where the protocol places them (constraint values). Limits and gates are unchanged, so a mandate under 0.11 keeps exactly its terms.",
   "boundsSchema": {

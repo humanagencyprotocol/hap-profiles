@@ -1,7 +1,7 @@
 {
-  "id": "github.com/humanagencyprotocol/hap-profiles/publish@0.8",
+  "id": "github.com/humanagencyprotocol/hap-profiles/publish@0.10",
   "name": "Publishing",
-  "version": "0.8",
+  "version": "0.10",
   "description": "Publishing authority — governs posting public content to social media, blogs, and other platforms",
   "whatsNew": "Protocol v0.8. Platforms, content types and audiences are now declared where the protocol places them (constraint values). Limits and gates are unchanged, so a mandate under 0.7 keeps exactly its terms.",
   "boundsSchema": {
