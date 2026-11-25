@@ -1,8 +1,6 @@
 # HAP Authority Profiles
 
-Authorization templates for the [Human Agency Protocol](https://humanagencyprotocol.org). Each profile defines what an AI agent is allowed to do within a specific domain — the bounds a human sets, and the Gatekeeper enforces.
-
-> **Version 0.4** — March 2026
+Authorization templates for the [Human Agency Protocol](https://humanagencyprotocol.org). Each profile defines what an AI agent is allowed to do within a specific domain — the bounds a person sets. The Gatekeeper checks each call against them; the Authority Server enforces the cumulative ones (per day, week, month).
 
 ---
 
@@ -11,8 +9,8 @@ Authorization templates for the [Human Agency Protocol](https://humanagencyproto
 A profile is a complete authorization schema. It specifies:
 
 - **Bounds schema** — the limits a human commits to (e.g., max amount, allowed currencies)
-- **Context schema** — local parameters that stay encrypted (e.g., allowed services, environment)
-- **Execution context** — what the Gatekeeper checks at runtime, including cumulative limits
+- **Scope schema** — local constraints that partition the action space (e.g., allowed recipients, environment)
+- **Execution context** — the values each call declares; the Gatekeeper checks them, and the Authority Server adds the running totals for cumulative limits
 - **Execution paths** — governance tiers with required domain owners and TTLs
 - **Gates** — the structured questions a human must answer before authorization
 
@@ -207,24 +205,24 @@ Governs quote-to-order in an ERP: draft quotes, send quotes to customers (a bind
 
 ## How Profiles Work
 
-A human creates an authorization by selecting a profile and execution path, setting the bounds, and answering the gate questions. Domain owners cryptographically attest to the bounds. The Gatekeeper then enforces those bounds on every tool call:
+A person picks a profile, sets the bounds and answers the questions, and signs a **mandate**. On every call the Gatekeeper checks the call against the bounds; for a consequential action it asks the Authority Server for a ticket, and the Authority Server checks the cumulative limits before signing it:
 
 ```
-Human sets bounds          Agent requests execution        Gatekeeper checks
-amount_max: 80 EUR    ->   amount: 5 EUR              ->  5 <= 80, approved
-action_type: [charge]      action_type: "charge"          "charge" in [charge], approved
-amount_daily_max: 500      amount_daily: 423 (from log)   423 + 5 <= 500, approved
+Mandate bound              Call declares                 Checked by
+amount_max: 80 EUR    ->   amount: 5 EUR            ->   Gatekeeper: 5 <= 80
+action_type: [charge]      action_type: "charge"         Gatekeeper: allowed
+amount_daily_max: 500      amount: 5 EUR                 Authority Server: 423 so far + 5 <= 500, ticket signed
 ```
 
-If any bound is exceeded, the Gatekeeper blocks execution.
+If any bound is exceeded, nothing runs.
 
-All profiles require the same six gates: bounds, problem, objective, tradeoff, commitment, and decision owner.
+Every profile asks the same questions before a mandate is signed: the bounds, the intent, the commitment and the Mandate Owner.
 
 ---
 
 ## Community Profiles
 
-Anyone can create and publish profiles through the [HAP Service Provider](https://humanagencyprotocol.com). Published profiles are immutable and versioned. There is no approval process — trust decisions are local.
+Anyone can write a profile and propose it to this repository. Published profiles are immutable and versioned; whether to trust one is decided locally.
 
 ---
 
