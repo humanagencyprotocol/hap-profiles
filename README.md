@@ -216,7 +216,7 @@ amount_daily_max: 500      amount: 5 EUR                 Authority Server: 423 s
 
 If any bound is exceeded, nothing runs.
 
-Every profile asks the same questions before a mandate is signed: the bounds, the intent, the commitment and the Mandate Owner.
+Before a mandate is signed, every profile requires the same four things: the bounds, the intent, the commitment mode, and an identifiable Mandate Owner, the person who grants it.
 
 ---
 
