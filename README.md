@@ -77,6 +77,7 @@ Governs sending, drafting, and reading email via Gmail.
 |-------|------|---------|
 | `recipient_max` | per-email | Maximum recipients |
 | `send_daily_max` | cumulative | Daily send/draft limit |
+| `send_weekly_max` | cumulative | Weekly send/draft limit, the last 7 days (from 0.11) |
 | `read_max_age_days` | per-query | Max email age for search |
 | `read_daily_max` | cumulative | Daily read limit |
 
@@ -144,6 +145,7 @@ Governs posting public content to social media, blogs, and other platforms.
 | Bound | Type | Purpose |
 |-------|------|---------|
 | `post_daily_max` | cumulative | Daily post limit |
+| `post_weekly_max` | cumulative | Weekly post limit, the last 7 days (from 0.9) |
 | `post_monthly_max` | cumulative | Monthly post limit |
 
 | Context | Type | Purpose |
